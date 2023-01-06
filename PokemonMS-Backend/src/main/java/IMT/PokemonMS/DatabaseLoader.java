@@ -5,6 +5,9 @@ import org.springframework.boot.CommandLineRunner;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.io.FileReader;
+import java.io.BufferedReader;
 
 @Component
 public class DatabaseLoader implements CommandLineRunner {
@@ -24,7 +27,21 @@ public class DatabaseLoader implements CommandLineRunner {
 
 			System.out.println("Connection to SQLite has been established.");
 
-		} catch (SQLException e) {
+			Statement stmt = conn.createStatement();
+			FileReader reader = new FileReader("start.sql");
+			BufferedReader buffer = new BufferedReader(reader);
+			String str = "", sql = "";
+            while ((str = buffer.readLine()) != null) {
+				sql += str + "\n";
+				if(str.indexOf(';') == -1) continue;
+				stmt.execute(sql);
+				sql = "";
+			}
+			reader.close();
+
+			System.out.println("Database created and populated with success.");
+
+		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
 	}
