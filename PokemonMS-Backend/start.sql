@@ -64,15 +64,9 @@ CREATE TABLE IF NOT EXISTS Tower (
     FOREIGN KEY (id_user) REFERENCES User(id)
 );
 
-CREATE TABLE IF NOT EXISTS Item_store (
-    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT
-);
-
 CREATE TABLE IF NOT EXISTS Egg_type (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    type TEXT CHECK( type IN ('common', 'rare', 'super rare', 'legendary') ) NOT NULL,
-    id_item_store BIGINT NOT NULL,
-    FOREIGN KEY (id_item_store) REFERENCES Item_store(id)
+    type TEXT CHECK( type IN ('common', 'epic', 'legendary') ) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS Egg (
@@ -88,9 +82,7 @@ CREATE TABLE IF NOT EXISTS Egg (
 
 CREATE TABLE IF NOT EXISTS Incubator_type (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    speed TEXT CHECK( speed IN ('slow', 'medium', 'fast')) NOT NULL,
-    id_item_store INTEGER NOT NULL,
-    FOREIGN KEY (id_item_store) REFERENCES Item_store(id)
+    speed TEXT CHECK( speed IN ('slow', 'medium', 'fast')) NOT NULL
 );
 
 
@@ -107,35 +99,25 @@ CREATE TABLE IF NOT EXISTS Incubator (
 CREATE TABLE IF NOT EXISTS Store (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     id_user INTEGER NOT NULL,
-    id_item_1 INTEGER NOT NULL,
-    id_item_2 INTEGER NOT NULL,
-    id_item_3 INTEGER NOT NULL,
+    id_pokemon_type_1 INTEGER NOT NULL,
+    id_pokemon_type_2 INTEGER NOT NULL,
+    id_pokemon_type_3 INTEGER NOT NULL,
     price_1 INT NOT NULL,
     price_2 INT NOT NULL,
     price_3 INT NOT NULL,
     FOREIGN KEY (id_user) REFERENCES User(id),
-    FOREIGN KEY (id_item_1) REFERENCES Item_store(id),
-    FOREIGN KEY (id_item_2) REFERENCES Item_store(id),
-    FOREIGN KEY (id_item_3) REFERENCES Item_store(id)
+    FOREIGN KEY (id_pokemon_type_1) REFERENCES Pokemon_type(id),
+    FOREIGN KEY (id_pokemon_type_2) REFERENCES Pokemon_type(id),
+    FOREIGN KEY (id_pokemon_type_3) REFERENCES Pokemon_type(id)
 );
 
-INSERT OR REPLACE INTO "Item_store" (id) VALUES (1);
-INSERT OR REPLACE INTO "Item_store" (id) VALUES (2);
-INSERT OR REPLACE INTO "Item_store" (id) VALUES (3);
-INSERT OR REPLACE INTO "Item_store" (id) VALUES (4);
-INSERT OR REPLACE INTO "Item_store" (id) VALUES (5);
-INSERT OR REPLACE INTO "Item_store" (id) VALUES (6);
-INSERT OR REPLACE INTO "Item_store" (id) VALUES (7);
+INSERT OR REPLACE INTO "Egg_type" (id, type) VALUES (1, 'common');
+INSERT OR REPLACE INTO "Egg_type" (id, type) VALUES (2, 'epic');
+INSERT OR REPLACE INTO "Egg_type" (id, type) VALUES (3, 'legendary');
 
-
-INSERT OR REPLACE INTO "Egg_type" (id, type, id_item_store) VALUES (1, 'common', 1);
-INSERT OR REPLACE INTO "Egg_type" (id, type, id_item_store) VALUES (2, 'rare', 2);
-INSERT OR REPLACE INTO "Egg_type" (id, type, id_item_store) VALUES (3, 'super rare', 3);
-INSERT OR REPLACE INTO "Egg_type" (id, type, id_item_store) VALUES (4, 'legendary', 4);
-
-INSERT OR REPLACE INTO "Incubator_type" (id, speed, id_item_store) VALUES (1, 'slow', 5);
-INSERT OR REPLACE INTO "Incubator_type" (id, speed, id_item_store) VALUES (2, 'medium', 6);
-INSERT OR REPLACE INTO "Incubator_type" (id, speed, id_item_store) VALUES (3, 'fast', 7);
+INSERT OR REPLACE INTO "Incubator_type" (id, speed) VALUES (1, 'slow');
+INSERT OR REPLACE INTO "Incubator_type" (id, speed) VALUES (2, 'medium');
+INSERT OR REPLACE INTO "Incubator_type" (id, speed) VALUES (3, 'fast');
 
 INSERT OR REPLACE INTO "Tower_type" (id, difficulty, id_trainer) VALUES (1, 1, 1);
 INSERT OR REPLACE INTO "Tower_type" (id, difficulty, id_trainer) VALUES (2, 2, 1);
