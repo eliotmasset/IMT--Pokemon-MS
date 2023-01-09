@@ -1,7 +1,7 @@
 #App {
   text-align: center;
-  width: 775px;
-  height: 475px;
+  width: 1000px;
+  height: 625px;
 }
 
 #App > div {
@@ -26,21 +26,21 @@
 }
 
 .temp-cube {
-  width: 105px;
-  height: 105px;
+  width: 140px;
+  height: 140px;
   border-radius: 25px;
   background: rgba(255,255,255,0.2);
   backdrop-filter: rgba(255, 0, 0, 0.2);
 }
 
 .flex-max-2 {
-  width: 225px;
-  height: 225px;
+  width: 300px;
+  height: 300px;
   flex-wrap: wrap;
   justify-content: space-between;
   align-content: space-between;
-  column-gap: 15px;
-  row-gap: 15px;
+  column-gap: 20px;
+  row-gap: 20px;
 }
 .background {
   position: absolute;
