@@ -29,9 +29,33 @@
   width: 140px;
   height: 140px;
   border-radius: 25px;
-  background: rgba(255,255,255,0.2);
-  backdrop-filter: rgba(255, 0, 0, 0.2);
+  background: linear-gradient(143.73deg, rgba(246, 232, 232, 0.3) 15.9%, rgba(217, 217, 217, 0.1) 85.78%);
+  backdrop-filter: blur(20px);
+
 }
+
+.littleIco {
+  width: 60%;
+}
+
+#backdrop {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(3.85deg, rgba(20, 19, 19, 0.4) 3.15%, rgba(33, 30, 31, 0) 101.7%);
+  backdrop-filter: blur(7.5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+h2 {
+  color: white;
+  display: inline-block;
+  margin: 0;
+  font-size: 4em;
+}
+
 
 .flex-max-2 {
   width: 300px;
@@ -49,10 +73,23 @@
   height: 100%;
   top: 0;
   left: 0;
-  background: linear-gradient(to right, #001052, #1761b0);
+  background: linear-gradient(to right, #001052, #1761b0);  background-size: 400%;
+  animation: bganimation 25s infinite;
   display: flex;
   flex-grow: 1;
   z-index: -1;
+}
+
+@keyframes bganimation {
+  0%{
+    background-position: 0 50%;
+  }
+  50%{
+    background-position: 100% 50%;
+  }
+  100%{
+    background-position: 0 50%;
+  }
 }
 
 .background div {

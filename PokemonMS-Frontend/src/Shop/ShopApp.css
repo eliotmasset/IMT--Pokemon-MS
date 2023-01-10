@@ -2,6 +2,10 @@
     height: 300px;
     width: 300px;
     border-radius: 25px;
-    background: rgba(255,255,255,0.2);
-    backdrop-filter: blur(1px);
+    backdrop-filter: blur(40px);
+    overflow: hidden;
+    background-image: url("../../public/HomeIco/ShopIco.png");
+    background-size: cover;
+    margin: 0;
 }
+

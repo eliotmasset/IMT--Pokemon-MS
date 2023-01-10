@@ -3,6 +3,11 @@ import FightApp from './Fight/FightApp';
 import ShopApp from './Shop/ShopApp';
 import EggApp from './Egg/EggApp';
 import FarmApp from './Farm/FarmApp';
+
+import ProfileApp from './Profile/ProfileApp';
+import SettingsApp from './Settings/SettingsApp';
+import TeamApp from './Team/TeamApp';
+
 import React from 'react';
 
 class App extends React.Component {
@@ -18,10 +23,13 @@ class App extends React.Component {
           <div className="flex-row">
             <EggApp />
             <div className="flex-row flex-max-2">
-              <div className="temp-cube"></div>
-              <div className="temp-cube"></div>
-              <div className="temp-cube"></div>
-              <div className="temp-cube"></div>
+                <ProfileApp />
+
+                <TeamApp />
+
+
+                <SettingsApp />
+              <div className="temp-cube"/>
             </div>
             <FarmApp />
           </div>

@@ -1,10 +1,10 @@
-#FightApp {
-    height: 300px;
-    width: 650px;
+#ProfileApp {
+    width: 140px;
+    height: 140px;
     border-radius: 25px;
     backdrop-filter: blur(40px);
     overflow: hidden;
-    background-image: url("../../public/HomeIco/FightIco.png");
+    background-image: url("../../public/HomeIco/BlurProfile.png");
     background-size: cover;
     margin: 0;
 }
