@@ -41,3 +41,54 @@
         transform: translateX(-510px) translateY(-325px);
     }
 }
+
+#TeamWindow {
+    width: 1250px;
+    height: 700px;
+    background-image:  url('../../public/team_menu.png');
+    background-size: 100% 100%;
+    overflow: hidden;
+}
+
+#TeamApp #TeamWindow  > * {
+    display: none;
+}
+
+#TeamApp.displayed #TeamWindow > * {
+    display: block;
+    animation: hideInsideTeam 0.5s linear;
+    animation-fill-mode: forwards;
+}
+
+@keyframes hideInsideTeam {
+    0% {
+        opacity: 0;
+    }
+    99% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.pokemonList {
+    position: absolute;
+    margin-top: 140px;
+    margin-left: 0px;
+}
+.pokemonSpriteDiv {
+    position: absolute;
+    margin-left: 700px;
+    margin-top: 300px;
+}
+.pokemonSprite {
+    height: 250px;
+    width: 250px;
+}
+input {
+    display: none;
+}
+ul {
+    list-style: none;
+}

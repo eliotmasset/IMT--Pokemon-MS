@@ -1,0 +1,17 @@
+.pokemon-dialog {
+    border-style: double;
+    border-width: 10px;
+    border-color: darkgrey;
+    border-radius: 3px;
+    background-color: white;
+    height: 75px;
+    margin-top: 650px;
+    width: 85%;
+    position: absolute;
+    box-sizing: border-box;
+    font-weight: 600;
+    text-align: left;
+    padding-left: 20px;
+    text-shadow: 0 0 2px black;
+    color: #252525;
+}
