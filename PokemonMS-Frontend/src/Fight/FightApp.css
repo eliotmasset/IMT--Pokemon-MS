@@ -3,9 +3,40 @@
     width: 650px;
     border-radius: 25px;
     backdrop-filter: blur(40px);
-    overflow: hidden;
     background-image: url("../../public/HomeIco/FightIco.png");
     background-size: cover;
     margin: 0;
+    border-radius: 25px;
 }
 
+#FightApp.displayed {
+    z-index: 1;
+}
+
+#FightApp #FightWindow {
+    background-color: white;
+    display: none;
+    position: absolute;
+    height: 300px;
+    width: 650px;
+    border-radius: 25px;
+    top: 0;
+    left: 0;
+}
+
+#FightApp.displayed #FightWindow {
+    display: block;
+    animation: scale 0.5s ease-in-out;
+    animation-fill-mode: forwards;
+}
+
+@keyframes scale {
+    0% {
+        height: 300px;
+        width: 650px;
+    }
+    100% {
+        height: var(--height-app);
+        width: var(--width-app);
+    }
+}

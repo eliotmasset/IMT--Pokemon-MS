@@ -1,7 +1,12 @@
+:root {
+  --width-app: 1000px;
+  --height-app: 625px;
+}
+
 #App {
   text-align: center;
-  width: 1000px;
-  height: 625px;
+  width: var(--width-app);
+  height: var(--height-app);
 }
 
 #App > div {
@@ -43,6 +48,7 @@
   height: 100%;
   background: linear-gradient(3.85deg, rgba(20, 19, 19, 0.4) 3.15%, rgba(33, 30, 31, 0) 101.7%);
   backdrop-filter: blur(7.5px);
+  border-radius: 25px;
   display: flex;
   align-items: center;
   justify-content: center;
