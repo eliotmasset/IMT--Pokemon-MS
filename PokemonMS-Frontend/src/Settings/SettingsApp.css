@@ -3,9 +3,42 @@
     height: 140px;
     border-radius: 25px;
     backdrop-filter: blur(40px);
-    overflow: hidden;
     background-image: url("../../public/HomeIco/BlurSettings.png");
     background-size: cover;
     margin: 0;
+}
+
+#SettingsApp.displayed {
+    z-index: 1;
+}
+
+#SettingsApp #SettingsWindow {
+    background-color: white;
+    display: none;
+    position: absolute;
+    width: 140px;
+    height: 140px;
+    border-radius: 25px;
+    top: 0;
+    left: 0;
+}
+
+#SettingsApp.displayed #SettingsWindow {
+    display: block;
+    animation: scaleSettings 0.5s ease-in-out;
+    animation-fill-mode: forwards;
+}
+
+@keyframes scaleSettings {
+    0% {
+        width: 140px;
+        height: 140px;
+        transform: translateX(0) translateY(0);
+    }
+    100% {
+        height: var(--height-app);
+        width: var(--width-app);
+        transform: translateX(-350px) translateY(-485px);
+    }
 }
 
