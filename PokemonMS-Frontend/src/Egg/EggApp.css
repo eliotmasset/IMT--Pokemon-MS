@@ -3,9 +3,42 @@
     width: 300px;
     border-radius: 25px;
     backdrop-filter: blur(40px);
-    overflow: hidden;
     background-image: url("../../public/HomeIco/EggIco.png");
     background-size: cover;
     margin: 0;
+}
+
+#EggApp.displayed {
+    z-index: 1;
+}
+
+#EggApp #EggWindow {
+    background-color: white;
+    display: none;
+    position: absolute;
+    height: 300px;
+    width: 300px;
+    border-radius: 25px;
+    top: 0;
+    left: 0;
+}
+
+#EggApp.displayed #EggWindow {
+    display: block;
+    animation: scaleEgg 0.5s ease-in-out;
+    animation-fill-mode: forwards;
+}
+
+@keyframes scaleEgg {
+    0% {
+        height: 300px;
+        width: 300px;
+        transform: translateY(0);
+    }
+    100% {
+        height: var(--height-app);
+        width: var(--width-app);
+        transform: translateY(-325px);
+    }
 }
 

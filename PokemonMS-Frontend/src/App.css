@@ -1,6 +1,8 @@
 :root {
   --width-app: 1000px;
   --height-app: 625px;
+  --width-app-no-px: 1000;
+  --height-app-no-px: 625;
 }
 
 #App {

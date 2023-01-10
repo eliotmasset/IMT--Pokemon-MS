@@ -3,9 +3,41 @@
     width: 300px;
     border-radius: 25px;
     backdrop-filter: blur(40px);
-    overflow: hidden;
     background-image: url("../../public/HomeIco/FarmIco.png");
     background-size: cover;
     margin: 0;
 }
 
+#FarmApp.displayed {
+    z-index: 1;
+}
+
+#FarmApp #FarmWindow {
+    background-color: white;
+    display: none;
+    position: absolute;
+    height: 300px;
+    width: 300px;
+    border-radius: 25px;
+    top: 0;
+    left: 0;
+}
+
+#FarmApp.displayed #FarmWindow {
+    display: block;
+    animation: scaleFarm 0.5s ease-in-out;
+    animation-fill-mode: forwards;
+}
+
+@keyframes scaleFarm {
+    0% {
+        height: 300px;
+        width: 300px;
+        transform: translateY(0) translateX(0);
+    }
+    100% {
+        height: var(--height-app);
+        width: var(--width-app);
+        transform: translateY(-325px) translateX(-700px);
+    }
+}

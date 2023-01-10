@@ -6,7 +6,6 @@
     background-image: url("../../public/HomeIco/FightIco.png");
     background-size: cover;
     margin: 0;
-    border-radius: 25px;
 }
 
 #FightApp.displayed {
@@ -26,11 +25,11 @@
 
 #FightApp.displayed #FightWindow {
     display: block;
-    animation: scale 0.5s ease-in-out;
+    animation: scaleFight 0.5s ease-in-out;
     animation-fill-mode: forwards;
 }
 
-@keyframes scale {
+@keyframes scaleFight {
     0% {
         height: 300px;
         width: 650px;

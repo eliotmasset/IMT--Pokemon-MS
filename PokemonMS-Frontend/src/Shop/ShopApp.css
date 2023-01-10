@@ -3,9 +3,41 @@
     width: 300px;
     border-radius: 25px;
     backdrop-filter: blur(40px);
-    overflow: hidden;
     background-image: url("../../public/HomeIco/ShopIco.png");
     background-size: cover;
     margin: 0;
 }
 
+#ShopApp.displayed {
+    z-index: 1;
+}
+
+#ShopApp #ShopWindow {
+    background-color: white;
+    display: none;
+    position: absolute;
+    height: 300px;
+    width: 300px;
+    border-radius: 25px;
+    top: 0;
+    left: 0;
+}
+
+#ShopApp.displayed #ShopWindow {
+    display: block;
+    animation: scaleShop 0.5s ease-in-out;
+    animation-fill-mode: forwards;
+}
+
+@keyframes scaleShop {
+    0% {
+        height: 300px;
+        width: 300px;
+        transform: translateX(0);
+    }
+    100% {
+        height: var(--height-app);
+        width: var(--width-app);
+        transform: translateX(-700px);
+    }
+}

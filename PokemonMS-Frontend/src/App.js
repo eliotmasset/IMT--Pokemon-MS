@@ -14,7 +14,7 @@ class App extends React.Component {
   render() {
     return (
       <div id="App">
-        <div class="background"><div></div><div></div><div></div><div></div></div>
+        <div className="background"><div></div><div></div><div></div><div></div></div>
         <div className="flex-column">
           <div className="flex-row">
             <FightApp />
