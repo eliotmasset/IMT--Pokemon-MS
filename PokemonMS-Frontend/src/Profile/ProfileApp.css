@@ -7,5 +7,8 @@
     background-image: url("../../public/HomeIco/BlurProfile.png");
     background-size: cover;
     margin: 0;
+    position: relative;
+    transition: z-index 0.5s 0.51s linear;
+    z-index: 0;
 }
 

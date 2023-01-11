@@ -1,14 +1,14 @@
 import './TeamApp.css';
 import React from 'react';
 import PokemonItem from "./PokemonItem";
-import BackButtonComponent from "./BackButtonComponent";
+import BackButtonComponent from "../components/BackButtonComponent";
 
 class TeamApp extends React.Component {
 
     constructor(props) {
       super(props);
       this.state = {
-        isDisplayed: false,
+        isDisplayed: null,
           pokemon_select: 2,
           pokemon_list : [
               {name:"darkrai", engName:"darkrai", gender:"no", level:"100"},
@@ -29,8 +29,7 @@ class TeamApp extends React.Component {
     }
   
     render() {
-      let className = "";
-        let sprite = require("./assets/sprite/" + this.state.pokemon_list[this.state.pokemon_select].engName  + "_sprite.gif");
+        let className = "";
         let list = this.state.pokemon_list.map((pokemon, key)=> {
             let className = "";
             let checked = key === this.state.pokemon_select;
@@ -42,10 +41,10 @@ class TeamApp extends React.Component {
                 </li>
             );
         });
-      if(this.state.isDisplayed) className = "displayed";
+        if(this.state.isDisplayed) className = "displayed";
         return (
-            <div id="TeamApp" className={className} onClick={() => this.setIsDisplayed(true)}>
-                <div id="backdrop">
+            <div id="TeamApp" className={className}>
+                <div id="backdrop" onClick={() => this.setIsDisplayed(true)}>
                     <img class="littleIco" src="/HomeIco/TeamIco.png"/>
                 </div>
 
@@ -57,7 +56,7 @@ class TeamApp extends React.Component {
                         </ul>
                     </div>
                     <div className="pokemonSpriteDiv">
-                        <img className="pokemonSprite" src={sprite} />
+                        <img className="pokemonSprite" src={"/sprite/" + this.state.pokemon_list[this.state.pokemon_select].engName  + "_sprite.gif"} />
                     </div>
                     <BackButtonComponent onClick={() => this.setIsDisplayed(false)}></BackButtonComponent>
                 </div>

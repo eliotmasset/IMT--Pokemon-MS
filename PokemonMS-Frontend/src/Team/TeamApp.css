@@ -6,61 +6,53 @@
     background-image: url("../../public/HomeIco/BlurTeam.png");
     background-size: cover;
     margin: 0;
+    position: relative;
+    transition: z-index 0.5s 0.51s linear;
+    z-index: 0;
 }
 
 #TeamApp.displayed {
     z-index: 1;
+    transition: none;
 }
 
 #TeamApp #TeamWindow {
     background-color: white;
-    display: none;
     position: absolute;
     width: 140px;
     height: 140px;
     border-radius: 25px;
+    opacity: 0;
+    z-index: -1;
     top: 0;
     left: 0;
+    background-image:  url('../../public/team_menu.png');
+    background-size: 100% 100%;
+    display: block;
+    transform: translate(0px, 0px);
+    transition: transform 0.5s ease-in-out, width 0.5s ease-in-out, height 0.5s ease-in-out, opacity 0.5s 0.51s linear, z-index 0.5s 0.51s linear;
 }
 
 #TeamApp.displayed #TeamWindow {
-    display: block;
-    animation: scaleTeam 0.5s ease-in-out;
-    animation-fill-mode: forwards;
+    z-index: 10;
+    opacity: 1;
+    width: var(--width-app);
+    height: var(--height-app);
+    transform: translate(-510px, -325px);
+    transition: transform 0.5s ease-in-out, width 0.5s ease-in-out, height 0.5s ease-in-out;
 }
 
-@keyframes scaleTeam {
-    0% {
-        width: 140px;
-        height: 140px;
-        transform: translateX(0) translateY(0);
-    }
-    100% {
-        height: var(--height-app);
-        width: var(--width-app);
-        transform: translateX(-510px) translateY(-325px);
-    }
-}
-
-#TeamWindow {
-    width: 1250px;
-    height: 700px;
-    background-image:  url('../../public/team_menu.png');
-    background-size: 100% 100%;
-    overflow: hidden;
-}
 
 #TeamApp #TeamWindow  > * {
-    display: none;
+    opacity: 0;
 }
 
 #TeamApp.displayed #TeamWindow > * {
-    display: block;
-    animation: hideInsideTeam 0.5s linear;
+    animation: showInsideTeam 0.5s ease-in-out;
     animation-fill-mode: forwards;
 }
 
-@keyframes hideInsideTeam {
+@keyframes showInsideTeam {
     0% {
         opacity: 0;
     }

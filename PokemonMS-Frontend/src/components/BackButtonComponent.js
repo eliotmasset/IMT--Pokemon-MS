@@ -8,11 +8,7 @@ export default class BackButtonComponent extends React.Component {
     }
     render(){
         return (
-            <div className="backButton" onClick={this.props.onClick}>
-                <a>
-                    <p>Retour</p>
-                </a>
-            </div>
+            <button className="backButton" onClick={this.props.onClick}>&#60;</button>
         );
     }
 }

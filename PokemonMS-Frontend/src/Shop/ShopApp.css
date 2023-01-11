@@ -6,10 +6,14 @@
     background-image: url("../../public/HomeIco/ShopIco.png");
     background-size: cover;
     margin: 0;
+    position: relative;
+    transition: z-index 0.5s 0.51s linear;
+    z-index: 0;
 }
 
 #ShopApp.displayed {
     z-index: 1;
+    transition: none;
 }
 
 #ShopApp #ShopWindow {
