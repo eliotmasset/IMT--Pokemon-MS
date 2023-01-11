@@ -43,7 +43,8 @@ CREATE TABLE IF NOT EXISTS User (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     id_trainer INTEGER NOT NULL,
     username VARCHAR(255) NOT NULL,
-    password VARCHAR(255) NOT NULL,
+    password VARCHAR(512) NOT NULL,
+    salt VARCHAR(255) NOT NULL,
     money INT NOT NULL,
     FOREIGN KEY (id_trainer) REFERENCES Trainer(id)
 );

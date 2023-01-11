@@ -6,7 +6,7 @@ class ProfileApp extends React.Component {
     return (
       <div id="ProfileApp">
         <div id="backdrop">
-            <img class="littleIco" src="/HomeIco/ProfileIco.png"/>
+            <img className="littleIco" src="/HomeIco/ProfileIco.png"/>
         </div>
 
 

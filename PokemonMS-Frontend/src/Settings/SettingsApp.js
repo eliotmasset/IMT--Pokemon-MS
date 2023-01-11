@@ -20,7 +20,7 @@ class SettingsApp extends React.Component {
     return (
       <div id="SettingsApp" className={className} onClick={() => this.setIsDisplayed(true)}>
         <div id="backdrop">
-            <img class="littleIco" src="/HomeIco/SettingsIco.png"/>
+            <img className="littleIco" src="/HomeIco/SettingsIco.png"/>
         </div>
 
 

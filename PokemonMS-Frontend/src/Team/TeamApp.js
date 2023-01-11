@@ -24,6 +24,7 @@ class TeamApp extends React.Component {
     setIsDisplayed(isDisplayed) {
       this.setState({isDisplayed: isDisplayed});
     }
+    
     selectPokemon(key) {
         this.setState({pokemon_select:key});
     }
@@ -36,7 +37,7 @@ class TeamApp extends React.Component {
             if(key === this.state.pokemon_select) className = "selected";
             return (
                 <li className={className} key={key}>
-                    <input type="radio" id={key} name="pkm" value={key} checked={checked}/>
+                    <input type="radio" id={key} name="pkm" value={key} checked={checked} onChange={() => {return;}}/>
                     <PokemonItem name={pokemon.name} gender={pokemon.gender} level={pokemon.level} onClick={()=> this.selectPokemon(key)}/>
                 </li>
             );
@@ -45,7 +46,7 @@ class TeamApp extends React.Component {
         return (
             <div id="TeamApp" className={className}>
                 <div id="backdrop" onClick={() => this.setIsDisplayed(true)}>
-                    <img class="littleIco" src="/HomeIco/TeamIco.png"/>
+                    <img className="littleIco" src="/HomeIco/TeamIco.png"/>
                 </div>
 
 

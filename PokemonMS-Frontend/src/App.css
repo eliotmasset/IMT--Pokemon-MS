@@ -144,3 +144,166 @@ h2 {
   transform: translateX(-50%) translateY(-50%);
 }
 
+#App .login {
+  width: var(--width-app);
+  max-height: var(--height-app);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  padding: 60px 20px 60px 20px;
+  transform: translate(-50%, -50%);
+  background: linear-gradient(143.73deg, rgba(246, 232, 232, 0.3) 15.9%, rgba(217, 217, 217, 0.1) 85.78%);
+  backdrop-filter: blur(20px);
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  gap: 20px;
+  overflow: auto;
+}
+
+#App .login h2 {
+  font-size: 70px;
+  font-weight: 600;
+  color: white;
+}
+
+#App .login p {
+  font-size: 17px;
+  font-weight: 600;
+  color: white;
+  margin: 0;
+}
+
+#App .login a {
+  font-size: 17px;
+  font-weight: 600;
+  color: #69DAF3;
+  margin: 0;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+#App .login .underline-connection {
+  width: 200px;
+  height: 4px;
+  border-radius: 2px;
+  background: white;
+  margin-bottom: 30px;
+}
+
+#App .login form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  gap: 20px;
+  width: 100%;
+}
+
+#App .login form input {
+  display: block;
+  border-radius: 10px;
+  border: none;
+  padding: 15px;
+  width: 300px;
+  background-color: #bdbdbd;
+  color: white;
+  font-size: 20px;
+  font-weight: 400;
+}
+
+#App .login form button {
+  border-radius: 10px;
+  border: none;
+  padding: 15px;
+  width: 250px;
+  cursor: pointer;
+  background-color: #69DAF3;
+  color: white;
+  font-size: 20px;
+  font-weight: 400;
+}
+
+#App .login form button:hover {
+  transform: scale(1.03);
+}
+
+#App .login form button:active {
+  transform: scale(0.97);
+}
+
+#App .login form button.loadingButton {
+  cursor: default;
+  pointer-events: none;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#App .login form button.loadingButton .loadingButtonSpinner {
+  display: inline-block;
+  position: relative;
+  width: 40px;
+  height: 40px;
+  transform: translate(-2px, -2px);
+}
+
+#App .login form button.loadingButton .loadingButtonSpinner div {
+  border: 4px solid currentColor;
+  opacity: 1;
+  border-radius: 50%;
+  animation: lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+  color: white;
+  position: absolute;
+}
+
+#App .login form button.loadingButton .loadingButtonSpinner div:nth-child(2) {
+  animation-delay: -0.5s;
+}
+
+@keyframes lds-ripple {
+  0% {
+    top: 18px;
+    left: 18px;
+    width: 0;
+    height: 0;
+    opacity: 0;
+  }
+  4.9% {
+    top: 18px;
+    left: 18px;
+    width: 0;
+    height: 0;
+    opacity: 0;
+  }
+  5% {
+    top: 18px;
+    left: 18px;
+    width: 0;
+    height: 0;
+    opacity: 1;
+  }
+  100% {
+    top: 0px;
+    left: 0px;
+    width: 36px;
+    height: 36px;
+    opacity: 0;
+  }
+}
+
+#App .login .underline-form-connection {
+  width: 150px;
+  height: 4px;
+  border-radius: 2px;
+  background: white;
+}
