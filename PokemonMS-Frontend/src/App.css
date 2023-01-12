@@ -11,6 +11,40 @@
   height: var(--height-app);
 }
 
+#App.loading {
+  cursor: wait;
+}
+
+#App.loading > div {
+  pointer-events: none;
+  filter: grayscale(60%);
+}
+
+#App > div.spinner {
+  display: none;
+}
+  #App.loading > div.spinner {
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+#App.loading > div.spinner > div {
+  width: 100px;
+  height: 100px;
+  border: 10px solid #f3f3f3;
+  border-top: 10px solid #3498db;
+  border-radius: 50%;
+  animation: spinLoaderApp 2s linear infinite;
+}
+
+@keyframes spinLoaderApp {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 #App > div {
   position: absolute;
   top: 50%;

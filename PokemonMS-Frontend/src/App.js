@@ -128,17 +128,24 @@ class App extends React.Component {
   render() {
     ( async () => {
         if(sessionStorage.getItem("jwt_token") !== undefined && sessionStorage.getItem("jwt_token") !== null && sessionStorage.getItem("jwt_token") !== "") {
-          let response = await fetch(UserAdress + "/Connected?jwt_token=" + sessionStorage.getItem("jwt_token"));
-          let data = await response.text();
-          if(data == "true" && this.state.connected == false) this.setState({connected: true, jwt_token_is_verified: true});
-          else if(data == "false" && this.state.connected == true) this.setState({connected: false, jwt_token_is_verified: true});
-          else if(this.state.jwt_token_is_verified == false) this.setState({jwt_token_is_verified: true});
-        } else if(this.state.jwt_token_is_verified == false) this.setState({jwt_token_is_verified: true});
+          try {
+            let response = await fetch(UserAdress + "/Connected?jwt_token=" + sessionStorage.getItem("jwt_token"));
+            let data = await response.text();
+            if(data == "true" && this.state.connected == false) this.setState({connected: true, jwt_token_is_verified: true});
+            else if(data == "false" && this.state.connected == true) this.setState({connected: false, jwt_token_is_verified: true});
+            else if(this.state.jwt_token_is_verified == false) this.setState({jwt_token_is_verified: true});
+          } catch(e) {
+            this.setState({connected: false, jwt_token_is_verified: true});
+            console.log(e);
+          }
+        } else if(this.state.jwt_token_is_verified == false) this.setState({connected: false, jwt_token_is_verified: true});
       }
     )();
     let th = this;
+    console.log(this.state.connected, this.state.jwt_token_is_verified);
+    let className = this.state.jwt_token_is_verified ? "" : "loading";
     if(!this.state.jwt_token_is_verified || (this.state.connected && this.state.jwt_token_is_verified)) return (
-      <div id="App">
+      <div id="App" className={className}>
         <div className="background"><div></div><div></div><div></div><div></div></div>
         <div className="flex-column">
           <div className="flex-row">
@@ -159,6 +166,7 @@ class App extends React.Component {
             <FarmApp />
           </div>
         </div>
+        <div className='spinner'><div></div></div>
       </div>
     );
     else if(!this.state.inscriptionPage) return (

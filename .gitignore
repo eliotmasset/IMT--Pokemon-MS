@@ -1,0 +1,6 @@
+
+## Directory-based project format
+.idea
+
+## All database (.db)
+*.db
