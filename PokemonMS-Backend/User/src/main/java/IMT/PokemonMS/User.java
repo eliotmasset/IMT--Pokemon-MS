@@ -75,7 +75,10 @@ public class User {
 			stmt.setString(1, username);
 			var rs = stmt.executeQuery();
 
-			if(rs.next()) return "Error Username already taken";
+			if(rs.next()) {
+				conn.close();
+				return "Error Username already taken";
+			}
 
 			//Hash Password
 			String salt = this.nextString();
@@ -156,7 +159,10 @@ public class User {
 			stmt.setString(1, username);
 			var rs = stmt.executeQuery();
 			
-			if(!rs.next()) return "Error Username not found";
+			if(!rs.next()) {
+				conn.close();
+				return "Error Username not found";
+			}
 
 			//Hash Password
 			String salt = rs.getString("salt");
@@ -166,7 +172,10 @@ public class User {
 			byte[] hashedBytes = this.hashPassword(passwordChars, saltBytes, this.iterations, this.keyLength);
 			String hashedString = Hex.encodeHexString(hashedBytes);
 
-			if(!hashedString.equals(rs.getString("password"))) return "Error Wrong password";
+			if(!hashedString.equals(rs.getString("password"))) {
+				conn.close();
+				return "Error Wrong password";
+			}
 
 
 			jwt_token = Jwts.builder()
@@ -196,9 +205,7 @@ public class User {
 	@GetMapping("/GetUsername")
 	public String getUsername(@RequestParam("jwt_token") String jwt_token) {
 		Connection conn = null;
-		// Check if the token is valid
 		try {
-			Jwts.parser().setSigningKey(Keys.hmacShaKeyFor(keyHMAC)).parseClaimsJws(jwt_token);
 			// Check end date 
 			var claims = Jwts.parser().setSigningKey(Keys.hmacShaKeyFor(keyHMAC)).parseClaimsJws(jwt_token).getBody();
 			if(claims.get("end_date") == null || claims.get("id") == null) return null;
@@ -210,7 +217,10 @@ public class User {
 			var stmt = conn.prepareStatement(query);
 			stmt.setLong(1, (int)claims.get("id"));
 			var rs = stmt.executeQuery();
-			if(!rs.next()) return null;
+			if(!rs.next()) {
+				conn.close();
+				return null;
+			}
 			String username = rs.getString("username");
 			conn.close();
 			return username;
@@ -244,7 +254,10 @@ public class User {
 			var stmt = conn.prepareStatement(query);
 			stmt.setLong(1, (int)claims.get("id"));
 			var rs = stmt.executeQuery();
-			if(!rs.next()) return -1;
+			if(!rs.next()) {
+				conn.close();
+				return -1;
+			}
 			int money = rs.getInt("money");
 			conn.close();
 			return money;

@@ -78,6 +78,7 @@ class App extends React.Component {
     let username = formData.get("username");
     let password = formData.get("password");
     let password2 = formData.get("password-retyped");
+    let gender = formData.get("gender");
     if(password !== password2) {
       alert("Passwords are not the same");
       button.classList.remove("loadingButton");
@@ -85,7 +86,7 @@ class App extends React.Component {
       return false;
     }
 
-    let response = await fetch(UserAdress + "/Subscribe?username=" + username + "&password=" + password + "&gender=0");
+    let response = await fetch(UserAdress + "/Subscribe?username=" + username + "&password=" + password + "&gender="+(gender ? 1 : 0));
     if(response === undefined || response === null) {
       alert("An error occured");
       button.classList.remove("loadingButton");
@@ -110,6 +111,20 @@ class App extends React.Component {
     return false;
   }
 
+  genderChange() {
+    console.log("genderChange");
+    let checkbox = document.querySelector("#gender");
+    let Lucas = document.querySelector("#Lucas");
+    let Aurore = document.querySelector("#Aurore");
+    if(checkbox.checked) {
+      Lucas.classList.add("selected");
+      Aurore.classList.remove("selected");
+    } else {
+      Lucas.classList.remove("selected");
+      Aurore.classList.add("selected");
+    }
+  }
+
   render() {
     ( async () => {
         if(sessionStorage.getItem("jwt_token") !== undefined && sessionStorage.getItem("jwt_token") !== null && sessionStorage.getItem("jwt_token") !== "") {
@@ -121,6 +136,7 @@ class App extends React.Component {
         } else if(this.state.jwt_token_is_verified == false) this.setState({jwt_token_is_verified: true});
       }
     )();
+    let th = this;
     if(!this.state.jwt_token_is_verified || (this.state.connected && this.state.jwt_token_is_verified)) return (
       <div id="App">
         <div className="background"><div></div><div></div><div></div><div></div></div>
@@ -174,9 +190,12 @@ class App extends React.Component {
             <input type="password" placeholder="Password (re-type)" name="password-retyped" />
             <button type="submit" onClick={async (e) => this.subscrib(e)}>Subscribe</button>
             <div className="underline-form-connection"></div>
+            <input type="checkbox" id="gender" name="gender" checked={true} style={{display:"none"}} />
             <p>Want to connect ?</p>
             <a onClick={() => this.setState({inscriptionPage: false})}>Connexion</a>
           </form>
+          <img id="Lucas" src={"/Lucas.webp"} className="selected" onClick={()=>{document.querySelector("#gender").checked = true; th.genderChange();}} />
+          <img id="Aurore" src={"/Aurore.webp"} onClick={()=>{document.querySelector("#gender").checked = false; th.genderChange();}} />
         </div>
       </div>
     );

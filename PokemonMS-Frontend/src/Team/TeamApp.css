@@ -29,17 +29,21 @@
     background-image:  url('../../public/team_menu.png');
     background-size: 100% 100%;
     display: block;
-    transform: translate(0px, 0px);
-    transition: transform 0.5s ease-in-out, width 0.5s ease-in-out, height 0.5s ease-in-out, opacity 0.5s 0.51s linear, z-index 0.5s 0.51s linear;
+    transform: translateX(0px) translateY(0px);
+    animation: unScaleTeam 0.5s ease-in-out;
+    animation-fill-mode: forwards;
+}
+
+#TeamApp:not(.displayed) #TeamWindow {
+    transition: opacity 0.5s linear;
 }
 
 #TeamApp.displayed #TeamWindow {
     z-index: 10;
     opacity: 1;
-    width: var(--width-app);
-    height: var(--height-app);
-    transform: translate(-510px, -325px);
-    transition: transform 0.5s ease-in-out, width 0.5s ease-in-out, height 0.5s ease-in-out;
+    transform: translateX(-510px) translateY(-325px);
+    animation: scaleTeam 0.5s ease-in-out;
+    animation-fill-mode: forwards;
 }
 
 
@@ -50,6 +54,32 @@
 #TeamApp.displayed #TeamWindow > * {
     animation: showInsideTeam 0.5s ease-in-out;
     animation-fill-mode: forwards;
+}
+
+@keyframes scaleTeam {
+    0% {
+        width: 140px;
+        height: 140px;
+        transform: translateX(0) translateY(0);
+    }
+    100% {
+        height: var(--height-app);
+        width: var(--width-app);
+        transform: translateX(-510px) translateY(-325px);
+    }
+}
+
+@keyframes unScaleTeam {
+    0% {
+        height: var(--height-app);
+        width: var(--width-app);
+        transform: translateX(-510px) translateY(-325px);
+    }
+    100% {
+        width: 140px;
+        height: 140px;
+        transform: translateX(0) translateY(0);
+    }
 }
 
 @keyframes showInsideTeam {

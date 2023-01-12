@@ -270,6 +270,43 @@ h2 {
   animation-delay: -0.5s;
 }
 
+#App .login img {
+  height: 80%;
+  bottom: 10%;
+  position: absolute;
+  filter: grayscale(70%);
+  cursor: pointer;
+}
+
+#App .login img.selected {
+  animation: bounce 2s infinite linear;
+  filter: none;
+  cursor: default;
+}
+
+#App .login img:nth-child(2) {
+  left : 0px;
+}
+
+#App .login img:nth-child(3) {
+  right: 0px;
+}
+
+@keyframes bounce {
+  0% {
+    transform: translateY(0px);
+  }
+  25% {
+    transform: translateY(-5px);
+  }
+  75% {
+    transform: translateY(5px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
 @keyframes lds-ripple {
   0% {
     top: 18px;
