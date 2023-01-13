@@ -9,22 +9,22 @@ class TeamApp extends React.Component {
       super(props);
       this.state = {
         isDisplayed: null,
-          pokemon_select: 2,
-          pokemon_list : [
-              {name:"darkrai", engName:"darkrai", gender:"no", level:"100"},
-              {name:"palkia", engName:"palkia", gender:"no", level:"100"},
-              {name:"dialga", engName:"dialga", gender:"no", level:"100"},
-              {name:"tortipouss", engName:"turtwig", gender:"male", level:"10"},
-              {name:"tiplouf", engName:"piplup", gender:"female", level:"10"},
-              {name:"ouisticram", engName:"chimchar", gender:"male", level:"10"}
-          ]
+        pokemon_select: 2,
+        pokemon_list : [
+            {name:"darkrai", engName:"darkrai", gender:"no", level:"100"},
+            {name:"palkia", engName:"palkia", gender:"no", level:"100"},
+            {name:"dialga", engName:"dialga", gender:"no", level:"100"},
+            {name:"tortipouss", engName:"turtwig", gender:"male", level:"10"},
+            {name:"tiplouf", engName:"piplup", gender:"female", level:"10"},
+            {name:"ouisticram", engName:"chimchar", gender:"male", level:"10"}
+        ]
       }
     }
   
     setIsDisplayed(isDisplayed) {
       this.setState({isDisplayed: isDisplayed});
     }
-    
+
     selectPokemon(key) {
         this.setState({pokemon_select:key});
     }
