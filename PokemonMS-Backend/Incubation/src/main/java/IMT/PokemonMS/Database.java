@@ -9,7 +9,7 @@ import java.sql.DriverManager;
 public class Database implements CommandLineRunner {
 
 	static String url = "jdbc:sqlite:../pokemonMS.db";
-	//static String url = "jdbc:sqlite:/mnt/c/pokemonMS.db"; // for wsl development
+	//static String url = "jdbc:sqlite:/mnt/c/Users/eliot/Documents/pokemonMS.db"; // for wsl development
 
 	@Override
 	public void run(String... strings) throws Exception {

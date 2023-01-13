@@ -55,7 +55,7 @@ public class User {
             SecretKeyFactory skf = SecretKeyFactory.getInstance( "PBKDF2WithHmacSHA512" );
             PBEKeySpec spec = new PBEKeySpec( password, salt, iterations, keyLength );
             SecretKey key = skf.generateSecret( spec );
-            byte[] res = key.getEncoded( );
+            byte[] res = key.getEncoded();
             return res;
         } catch ( NoSuchAlgorithmException | InvalidKeySpecException e ) {
             throw new RuntimeException( e );
@@ -127,6 +127,7 @@ public class User {
 			jwt_token = Jwts.builder()
 				.setSubject(username)
 				.claim("id", insertId)
+				.claim("username", username)
 				.claim("end_date", System.currentTimeMillis() + (1000 * 60 * 60 * 24 * 7))
 				.signWith(Keys.hmacShaKeyFor(keyHMAC), SignatureAlgorithm.HS256)
 				.compact();
@@ -181,6 +182,7 @@ public class User {
 			jwt_token = Jwts.builder()
 				.setSubject(username)
 				.claim("id", rs.getLong("id"))
+				.claim("username", username)
 				.claim("end_date", System.currentTimeMillis() + (1000 * 60 * 60 * 24 * 7))
 				.signWith(Keys.hmacShaKeyFor(keyHMAC), SignatureAlgorithm.HS256)
 				.compact();
@@ -275,7 +277,7 @@ public class User {
 	}
 
 	@GetMapping("/Connected")
-	public Boolean Connected(@RequestParam("jwt_token") String jwt_token) {
+	public Boolean Connected(@RequestParam("jwt_token") String jwt_token, @RequestParam("username") String username) {
 		Connection conn = null;
 		// Check if the token is valid
 		try {
@@ -284,6 +286,7 @@ public class User {
 			var claims = Jwts.parser().setSigningKey(Keys.hmacShaKeyFor(keyHMAC)).parseClaimsJws(jwt_token).getBody();
 			if(claims.get("end_date") == null || claims.get("id") == null) return false;
 			if((long)claims.get("end_date") < System.currentTimeMillis()) return false;
+			if(!((String)claims.get("username")).equals(username)) return false;
 			if((int)claims.get("id") < 0) return false;
 			conn = Database.getConnection();
 			if(conn == null) return false;

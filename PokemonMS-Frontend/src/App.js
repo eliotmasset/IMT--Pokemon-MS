@@ -43,7 +43,8 @@ class App extends React.Component {
     let data = await response.text();
     if(data !== undefined && data !== null && data !== "" && data.slice(0, 5) !== "Error") {
       sessionStorage.setItem("jwt_token", data);
-      response = await fetch(UserAdress + "/Connected?jwt_token=" + sessionStorage.getItem("jwt_token"));
+      sessionStorage.setItem("username", username);
+      response = await fetch(UserAdress + "/Connected?jwt_token=" + sessionStorage.getItem("jwt_token") + "&username=" + username);
       data = await response.text();
       if(data == "true" && this.state.connected == false) this.setState({connected: true, jwt_token_is_verified: true});
       else if(data == "false" && this.state.connected == true) this.setState({connected: false, jwt_token_is_verified: true});
@@ -62,6 +63,7 @@ class App extends React.Component {
     event.preventDefault();
     event.stopPropagation();
     sessionStorage.removeItem("jwt_token");
+    sessionStorage.removeItem("username");
     this.setState({connected: false, jwt_token_is_verified: true});
     return false;
   }
@@ -96,7 +98,8 @@ class App extends React.Component {
     let data = await response.text();
     if(data !== undefined && data !== null && data !== "" && data.slice(0, 5) !== "Error") {
       sessionStorage.setItem("jwt_token", data);
-      response = await fetch(UserAdress + "/Connected?jwt_token=" + sessionStorage.getItem("jwt_token"));
+      sessionStorage.setItem("username", username);
+      response = await fetch(UserAdress + "/Connected?jwt_token=" + sessionStorage.getItem("jwt_token") + "&username=" + username);
       data = await response.text();
       if(data == "true" && this.state.connected == false) this.setState({connected: true, jwt_token_is_verified: true});
       else if(data == "false" && this.state.connected == true) this.setState({connected: false, jwt_token_is_verified: true});
@@ -112,7 +115,6 @@ class App extends React.Component {
   }
 
   genderChange() {
-    console.log("genderChange");
     let checkbox = document.querySelector("#gender");
     let Lucas = document.querySelector("#Lucas");
     let Aurore = document.querySelector("#Aurore");
@@ -129,7 +131,7 @@ class App extends React.Component {
     ( async () => {
         if(sessionStorage.getItem("jwt_token") !== undefined && sessionStorage.getItem("jwt_token") !== null && sessionStorage.getItem("jwt_token") !== "") {
           try {
-            let response = await fetch(UserAdress + "/Connected?jwt_token=" + sessionStorage.getItem("jwt_token"));
+            let response = await fetch(UserAdress + "/Connected?jwt_token=" + sessionStorage.getItem("jwt_token") + "&username=" + sessionStorage.getItem("username"));
             let data = await response.text();
             if(data == "true" && this.state.connected == false) this.setState({connected: true, jwt_token_is_verified: true});
             else if(data == "false" && this.state.connected == true) this.setState({connected: false, jwt_token_is_verified: true});
@@ -142,7 +144,6 @@ class App extends React.Component {
       }
     )();
     let th = this;
-    console.log(this.state.connected, this.state.jwt_token_is_verified);
     let className = this.state.jwt_token_is_verified ? "" : "loading";
     if(!this.state.jwt_token_is_verified || (this.state.connected && this.state.jwt_token_is_verified)) return (
       <div id="App" className={className}>

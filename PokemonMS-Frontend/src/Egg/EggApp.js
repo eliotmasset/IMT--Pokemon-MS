@@ -2,20 +2,15 @@ import './EggApp.css';
 import React from 'react';
 import BackButtonComponent from '../components/BackButtonComponent';
 
+const IncubatorAdress = "http://localhost:8082";
+
 class EggApp extends React.Component {
   
   constructor(props) {
     super(props);
     this.state = {
       isDisplayed: false,
-      incubators: [
-        { isUsed: true, startDate: new Date("2023-01-12T16:00:00"), endDate: new Date("2023-01-14T00:00:00"), eggType: "common", price: null },
-        { isUsed: true, startDate: new Date("2023-01-12T16:00:00"), endDate: new Date("2023-01-14T00:00:00"), eggType: "common", price: null },
-        { isUsed: true, startDate: new Date("2023-01-12T16:00:00"), endDate: new Date("2023-01-14T00:00:00"), eggType: "rare", price: null },
-        { isUsed: true, startDate: new Date("2023-01-12T16:00:00"), endDate: new Date("2023-01-14T00:00:00"), eggType: "legendary", price: null },
-        { isUsed: true, startDate: new Date("2023-01-12T16:00:00"), endDate: new Date("2023-01-14T00:00:00"), eggType: "rare", price: null},
-        { isUsed: false, startDate: null, endDate: null, eggType: "", price: 10000 },
-      ]
+      incubators: []
     }
   }
 
@@ -42,7 +37,9 @@ class EggApp extends React.Component {
     let className = "";
     if(this.state.isDisplayed) className = "displayed";
     ( async () => {
-      
+      let response = await fetch(IncubatorAdress + "/getIncubatorList?jwt_token=" + sessionStorage.getItem("jwt_token") + "&username=" + sessionStorage.getItem("username"));
+      let incubators = await response.json();
+      if(JSON.stringify(incubators) !== JSON.stringify(this.state.incubators)) this.setState({incubators: incubators});
     })();
     return (
       <div id="EggApp" className={className}>
@@ -69,7 +66,7 @@ class EggApp extends React.Component {
                   <div className="IncubatorBar" style={{width: percent + "%"}}></div>
                   <img className="IncubatorEgg" src={"/"+img_filename}></img>
                   <img className="IncubatorImg" src={"incubator.png"}></img>
-                  <h4>{incubator.eggType.charAt(0).toUpperCase() + incubator.eggType.slice(1)} Egg</h4>
+                  <h4>{incubator.eggType !== null ? incubator.eggType.charAt(0).toUpperCase() + incubator.eggType.slice(1) : ""} Egg</h4>
                   <h4>Unlock</h4>
                 </div>
               );
