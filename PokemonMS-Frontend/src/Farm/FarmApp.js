@@ -15,11 +15,11 @@ class FarmApp extends React.Component {
   }
 
   render() {
-    let className = "";
-    if(this.state.isDisplayed) className = "displayed";
+    let className = "cardParralax";
+    if(this.state.isDisplayed) className = "cardParralax displayed";
     return (
       <div id="FarmApp" className={className} onClick={() => this.setIsDisplayed(true)}>
-        <div id="backdrop">
+        <div className="backdrop">
           <h2> FARM </h2>
         </div>
 

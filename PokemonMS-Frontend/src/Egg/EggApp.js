@@ -34,8 +34,8 @@ class EggApp extends React.Component {
   }
 
   render() {
-    let className = "";
-    if(this.state.isDisplayed) className = "displayed";
+    let className = "cardParralax";
+    if(this.state.isDisplayed) className = "cardParralax displayed";
     ( async () => {
       let response = await fetch(IncubatorAdress + "/getIncubatorList?jwt_token=" + sessionStorage.getItem("jwt_token") + "&username=" + sessionStorage.getItem("username"));
       let incubators = await response.json();
@@ -43,7 +43,7 @@ class EggApp extends React.Component {
     })();
     return (
       <div id="EggApp" className={className}>
-        <div id="backdrop" onClick={() => this.setIsDisplayed(true)}>
+        <div className="backdrop" onClick={() => this.setIsDisplayed(true)}>
           <h2> PENSION </h2>
         </div>
 

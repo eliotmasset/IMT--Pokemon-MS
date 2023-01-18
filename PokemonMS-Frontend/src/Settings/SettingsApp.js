@@ -15,11 +15,11 @@ class SettingsApp extends React.Component {
   }
 
   render() {
-    let className = "";
-    if(this.state.isDisplayed) className = "displayed";
+    let className = "cardParralax";
+    if(this.state.isDisplayed) className = "cardParralax displayed";
     return (
       <div id="SettingsApp" className={className} onClick={() => this.setIsDisplayed(true)}>
-        <div id="backdrop">
+        <div className="backdrop">
             <img className="littleIco" src="/HomeIco/SettingsIco.png"/>
         </div>
 
