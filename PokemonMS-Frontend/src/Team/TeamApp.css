@@ -113,3 +113,13 @@ input {
 ul {
     list-style: none;
 }
+
+#TeamApp #TeamWindow h3 {
+    position: absolute;
+    margin-top: 15px;
+    margin-left: 30px;
+    font-size: 70px;
+    color: black;
+    font-weight: 900;
+    font-style: italic;
+}

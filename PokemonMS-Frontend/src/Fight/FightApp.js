@@ -15,12 +15,13 @@ class FightApp extends React.Component {
   }
 
   render() {
-    let className = "cardParralax";
-    if(this.state.isDisplayed) className = "cardParralax displayed";
+    let className = "cardMenu";
+    if(this.state.isDisplayed) className = "cardMenu displayed";
     return (
-      <div id="FightApp" className={className} onClick={() => this.setIsDisplayed(true)}>
+      <div id="FightApp" className={className}>
 
         <div className="backdrop">
+            <div className='bright-effect' onClick={() => this.setIsDisplayed(true)}></div>
             <h2> COMBATS </h2>
         </div>
 

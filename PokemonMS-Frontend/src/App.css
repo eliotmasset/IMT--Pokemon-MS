@@ -379,3 +379,36 @@ h2 {
   border-radius: 2px;
   background: white;
 }
+
+.cardMenu .bright-effect {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  border-radius: 25px;
+  background-repeat: no-repeat;
+  background-image: url("https://assets.codepen.io/13471/sparkles.gif"), 
+    url(https://assets.codepen.io/13471/holo.png), 
+    linear-gradient(125deg, #ff008450 15%, #fca40040 30%, #ffff0030 40%, #00ff8a20 60%, #00cfff40 70%, #cc4cfa50 85%);
+  background-position: 50% 50%;
+  background-size: 160%;
+  background-blend-mode: overlay;
+  z-index: 1;
+  filter: brightness(.7) contrast(1) blur(3px);
+  transition: all .33s ease;
+  mix-blend-mode: color-dodge;
+  opacity: .3;
+  cursor: pointer;
+}
+
+.cardMenu .backdrop > img, 
+  .cardMenu .backdrop > h2 {
+  transition: transform 0.15s ease-in-out;
+}
+
+.cardMenu:hover .backdrop > img,
+  .cardMenu:hover .backdrop > h2 {
+  transform: scale(1.05);
+}

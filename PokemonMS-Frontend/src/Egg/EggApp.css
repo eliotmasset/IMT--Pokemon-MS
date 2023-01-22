@@ -183,3 +183,13 @@
     margin: 0;
     z-index: 1;
 }
+
+#EggApp #EggWindow h3 {
+    position: absolute;
+    margin-top: 15px;
+    margin-left: 30px;
+    font-size: 70px;
+    color: black;
+    font-weight: 900;
+    font-style: italic;
+}

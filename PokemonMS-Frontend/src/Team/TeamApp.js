@@ -42,16 +42,18 @@ class TeamApp extends React.Component {
                 </li>
             );
         });
-        className = "cardParralax";
-        if(this.state.isDisplayed) className = "cardParralax displayed";
+        className = "cardMenu";
+        if(this.state.isDisplayed) className = "cardMenu displayed";
         return (
             <div id="TeamApp" className={className}>
-                <div className="backdrop" onClick={() => this.setIsDisplayed(true)}>
+                <div className="backdrop">
+                    <div className='bright-effect' onClick={() => this.setIsDisplayed(true)}></div>
                     <img className="littleIco" src="/HomeIco/TeamIco.png"/>
                 </div>
 
 
                 <div id="TeamWindow">
+                    <h3>POKEMON TEAM</h3>
                     <div className="pokemonList">
                         <ul>
                             {list}

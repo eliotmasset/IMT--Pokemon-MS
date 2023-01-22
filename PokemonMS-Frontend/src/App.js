@@ -22,33 +22,6 @@ class App extends React.Component {
     }
   }
 
-  initParralax() {
-    window.onpointermove = e => {
-      document.querySelectorAll("#App .cardParralax").forEach((app) => {
-        let div = app.querySelector(".backdrop h2, .backdrop img");
-        if(app.classList.contains("displayed")) {
-          div.style.transform = ``;
-          app.style.transform = ``;
-          return;
-        }
-        const r = div.getBoundingClientRect();
-        let x = e.clientX - r.x;
-        let y = e.clientY - r.y;
-        let u = x / app.clientWidth;
-        let v = y / app.clientHeight;
-        if(x > app.clientWidth) u = 1;
-        if(x < -app.clientWidth) u = -1;
-        if(y > app.clientHeight) v = 1;
-        if(y < -app.clientHeight) v = -1;
-
-        app.style.setProperty("--ry", `${(u-0.5)*10}deg`)
-        app.style.setProperty("--rx", `${(v-0.5)*-10}deg`)
-        div.style.transform = `perspective(10000px) rotateY(${(u-0.5)*10}deg) rotateX(${(v-0.5)*-10}deg) scale(1.1)translateZ(40px)`
-        app.style.transform = `perspective(10000px) rotateY(${(u-0.5)*10}deg) rotateX(${(v-0.5)*-10}deg)`
-      });
-    }
-  }
-
   async connect(event) {
     event.preventDefault();
     event.stopPropagation();
@@ -172,8 +145,6 @@ class App extends React.Component {
     )();
     let th = this;
     let className = this.state.jwt_token_is_verified ? "" : "loading";
-
-    this.initParralax();
 
     if(!this.state.jwt_token_is_verified || (this.state.connected && this.state.jwt_token_is_verified)) return (
       <div id="App" className={className}>
