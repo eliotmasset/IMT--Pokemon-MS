@@ -1,0 +1,31 @@
+.moneyDiv {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    position: absolute;
+    width: 200px;
+    left: 0px;
+    top: 0px;
+    margin-left: 38px;
+    margin-top: 25px;
+    background: #282727;
+    border-radius: 15px;
+}
+.imgPokedollar {
+    width: 50%;
+    margin-left: -45px;
+    margin-top: 5px;
+}
+.amountMoney {
+    position: absolute;
+    width: 100px;
+    height: 40px;
+    left: 74px;
+    top: 5px;
+    font-family: 'Timmana';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 36px;
+    line-height: 59px;
+    text-align: center;
+    color: #FFFFFF;
+}

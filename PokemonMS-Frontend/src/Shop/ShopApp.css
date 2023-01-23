@@ -25,12 +25,71 @@
     border-radius: 25px;
     top: 0;
     left: 0;
+    background-image:  url('../../public/boutique_background.png');
+    background-size: 100% 100%;
 }
 
 #ShopApp.displayed #ShopWindow {
     display: block;
     animation: scaleShop 0.5s ease-in-out;
     animation-fill-mode: forwards;
+}
+
+
+.itemList {
+    position: absolute;
+    margin-top: 90px;
+    margin-left: 420px;
+}
+.shopSpriteDiv {
+    position: absolute;
+    margin-left: 100px;
+    margin-top: 300px;
+}
+.shopSprite {
+    width: 200px;
+}
+.nameDescription {
+    width: 540px;
+    height: 32px;
+    left: 609px;
+    top: 647px;
+    background: #0340C5;
+    color: #FFFFFF;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 10% 100%);
+}
+.nameDescription > h1 {
+    font-weight: 300;
+    margin-left: 60px;
+    font-family: 'Timmana';
+    font-style: normal;
+    font-size: 30px;
+    line-height: 33px;
+    text-align: left;
+}
+.itemDescription {
+    width: 450px;
+    height: 66px;
+    left: 682px;
+    top: 693px;
+
+    font-family: 'Timmana';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 33px;
+    text-align: justify;
+    color: #000000;
+    padding-left: 60px;
+}
+.rechargerButton {
+    width: 300px;
+    height: 61.13px;
+    left: 913px;
+    top: 576px;
+
+    background: #D9D9D9;
+    border-radius: 10px;
 }
 
 @keyframes scaleShop {
