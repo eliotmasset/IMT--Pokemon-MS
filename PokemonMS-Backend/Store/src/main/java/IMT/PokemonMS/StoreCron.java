@@ -12,7 +12,6 @@ class StoreCron  {
     
 	@Scheduled(cron = "0 * * * * *", zone = "Europe/Paris")	
 	private void reloadStores() {
-		System.out.println("Reloading stores...");
 		Connection conn = null;
 		try {
 			conn = Database.getConnection();
@@ -23,6 +22,7 @@ class StoreCron  {
 			var rs2 = stmt2.executeQuery();
 			while(rs.next()) {
 				var stmt3 = conn.prepareStatement("UPDATE Store SET id_pokemon_type_1 = ?, id_pokemon_type_2 = ?, id_pokemon_type_3 = ?, price_1 = ?, price_2 = ?, price_3 = ?");
+				rs2.next();
 				stmt3.setInt(1, rs2.getInt("id"));
 				rs2.next();
 				stmt3.setInt(2, rs2.getInt("id"));

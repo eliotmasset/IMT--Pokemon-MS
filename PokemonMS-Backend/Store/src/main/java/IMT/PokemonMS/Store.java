@@ -86,18 +86,28 @@ public class Store {
 		Connection conn = null;
 		try {
 			conn = Database.getConnection();
-			var stmt = conn.prepareStatement("SELECT id_pokemon_type_1, id_pokemon_type_2, id_pokemon_type_3, price_1, price_2, price_3 FROM Store s INNER JOIN User u ON u.id=s.id_user WHERE u.username = ?");
+			var stmt = conn.prepareStatement("SELECT pt1.name as name_1, pt2.name as name_2, pt3.name as name_3, pt1.english_name as engName_1, pt2.english_name as engName_2, pt3.english_name as engName_3, pt1.description as desc_1, pt2.description as desc_2, pt3.description as desc_3, s.price_1, s.price_2, s.price_3 FROM Store s INNER JOIN User u ON u.id=s.id_user INNER JOIN Pokemon_type pt1 ON pt1.id=s.id_pokemon_type_1 INNER JOIN Pokemon_type pt2 ON pt2.id=s.id_pokemon_type_2 INNER JOIN Pokemon_type pt3 ON pt3.id=s.id_pokemon_type_3 WHERE u.username = ?");
 			stmt.setString(1, username);
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
-				var obj = new JSONObject();
-				obj.put("id_pokemon_type_1", rs.getInt("id_pokemon_type_1"));
-				obj.put("id_pokemon_type_2", rs.getInt("id_pokemon_type_2"));
-				obj.put("id_pokemon_type_3", rs.getInt("id_pokemon_type_3"));
-				obj.put("price_1", rs.getInt("price_1"));
-				obj.put("price_2", rs.getInt("price_2"));
-				obj.put("price_3", rs.getInt("price_3"));
-				ret.add(obj);
+				var pokemon_1 = new JSONObject();
+				var pokemon_2 = new JSONObject();
+				var pokemon_3 = new JSONObject();
+				pokemon_1.put("name", rs.getString("name_1"));
+				pokemon_1.put("engName", rs.getString("engName_1"));
+				pokemon_1.put("description", rs.getString("desc_1"));
+				pokemon_1.put("price", rs.getInt("price_1"));
+				pokemon_2.put("name", rs.getString("name_2"));
+				pokemon_2.put("engName", rs.getString("engName_2"));
+				pokemon_2.put("description", rs.getString("desc_2"));
+				pokemon_2.put("price", rs.getInt("price_2"));
+				pokemon_3.put("name", rs.getString("name_3"));
+				pokemon_3.put("engName", rs.getString("engName_3"));
+				pokemon_3.put("description", rs.getString("desc_3"));
+				pokemon_3.put("price", rs.getInt("price_3"));
+				ret.add(pokemon_1);
+				ret.add(pokemon_2);
+				ret.add(pokemon_3);
 			}
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
