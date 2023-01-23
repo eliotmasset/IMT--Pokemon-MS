@@ -17,7 +17,8 @@
 }
 
 #FightApp #FightWindow {
-    background-color: white;
+    background-image:  url('../../public/towerMenuBackground.png');
+    background-size: cover;
     display: none;
     position: absolute;
     height: 300px;
@@ -42,4 +43,77 @@
         height: var(--height-app);
         width: var(--width-app);
     }
+}
+.towerLvl {
+    position: absolute;
+    width: 270px;
+    height: 270px;
+    left: 50%;
+    top: 30%;
+    background: rgba(242, 96, 96, 0.8);
+    backdrop-filter: blur(20px);
+    border-radius: 50%;
+    font-family: 'Arial', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 110px;
+    line-height: 124px;
+    text-align: center;
+    color: #FFFFFF;
+    transform: translateX(-50%);
+}
+.towerLvl > h1 {
+    font-size: 75%;
+    margin-top: -15px;
+}
+#blackOpacity {
+   background: linear-gradient(0.67deg, #393434 0.6%, rgba(57, 52, 52, 0.9) 46.31%, rgba(57, 52, 52, 0.4) 99.45%);
+    width: 100%;
+    height: 100%;
+}
+.towerFight {
+    background-color: #D9D9D9;
+    border: 1px solid transparent;
+    border-radius: .75rem;
+    box-sizing: border-box;
+    color: black;
+    cursor: pointer;
+    flex: 0 0 auto;
+    font-family: "Inter var",ui-sans-serif,system-ui,-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+    font-size: 1.125rem;
+    font-weight: 600;
+    line-height: 1.5rem;
+    text-decoration: none #6B7280 solid;
+    text-decoration-thickness: auto;
+    transition-duration: .2s;
+    transition-property: background-color,border-color,color,fill,stroke;
+    transition-timing-function: cubic-bezier(.4, 0, 0.2, 1);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    padding: .75rem 1.2rem;
+    text-align: center;
+    display: flex;
+    top: 75%;
+    position: absolute;
+    left: 20%;
+}
+.towerFight:hover {
+    background-color: #111827;
+    color: #FFFFFF;
+}
+.hide-on-hover {
+    display: block;
+}
+.show-on-hover {
+    display: none;
+}
+.towerFight:hover .show-on-hover {
+    display: block;
+}
+.towerFight:hover .hide-on-hover {
+    display: none;
+}
+.startFight {
+    padding: 0.5em 0.5em 0.5em 0.5em;
 }
