@@ -132,9 +132,9 @@ public class User {
 			stmt2.setInt(2, rs.getInt("id"));
 			rs.next();
 			stmt2.setInt(3, rs.getInt("id"));
-			stmt2.setInt(4, (int)( 100 + (int)(Math.random() * (100 + 1))));
-			stmt2.setInt(5, (int)( 100 + (int)(Math.random() * (100 + 1))));
-			stmt2.setInt(6, (int)( 100 + (int)(Math.random() * (100 + 1))));
+			stmt2.setInt(4, (int)( 100 + (int)(Math.random() * (200 + 1))));
+			stmt2.setInt(5, (int)( 100 + (int)(Math.random() * (200 + 1))));
+			stmt2.setInt(6, (int)( 100 + (int)(Math.random() * (200 + 1))));
 			stmt2.setLong(7, insertId);
 			stmt2.executeUpdate();
 			

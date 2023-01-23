@@ -44,7 +44,7 @@
 .shopSpriteDiv {
     position: absolute;
     margin-left: 100px;
-    margin-top: 300px;
+    bottom: 100px;
 }
 .shopSprite {
     width: 200px;
@@ -61,9 +61,10 @@
 .nameDescription > h1 {
     font-weight: 300;
     margin-left: 60px;
-    font-family: 'Timmana';
+    font-family: "Inter var",ui-sans-serif,system-ui,-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
     font-style: normal;
-    font-size: 30px;
+    font-size: 20px;
+    font-weight: 600;
     line-height: 33px;
     text-align: left;
 }
@@ -81,6 +82,12 @@
     text-align: justify;
     color: #000000;
     padding-left: 60px;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+   -webkit-box-orient: vertical;
 }
 
 .rechargerButton:hover {
@@ -98,10 +105,9 @@
         padding: .75rem 1.5rem;
     }
 }
-.rechargerButton, .payButton {
+.rechargerButton {
     background-color: #D9D9D9;
     border: 1px solid transparent;
-    border-radius: .75rem;
     box-sizing: border-box;
     color: #000000;
     cursor: pointer;
@@ -118,13 +124,44 @@
     user-select: none;
     -webkit-user-select: none;
     touch-action: manipulation;
-    padding: .75rem 1.2rem;
+    padding: 5px;
     text-align: center;
+    width: 100%;
+    border-radius: 25px;
 }
 
-.rechargerButton:hover, .payButton:hover {
+.rechargerButton img {
+    height: 25px;
+}
+
+.rechargerButton li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    column-gap: 10px;
+    width: 100%;
+}
+
+.payButton:hover {
     background-color: #111827;
     color: #FFFFFF;
+}
+
+.payButton {
+    background-color: #D9D9D9;
+    color: #000000;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    box-sizing: border-box;
+    cursor: pointer;
+    padding: 5px 10px;
+    margin-left: 10px;
+    transform: translateY(10px);
+}
+
+.payButton:hover {
+    background-color: #111827;
+    color: #ffff67;
 }
 
 @keyframes scaleShop {
@@ -143,4 +180,11 @@
 .shopButton {
     display: flex;
     justify-content: space-around;
+    width: 100%;
+    padding:0;
+}
+
+.shopButton li {
+    width: 100%;
+    padding-right: 10px;
 }

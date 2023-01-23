@@ -28,9 +28,9 @@ class StoreCron  {
 				stmt3.setInt(2, rs2.getInt("id"));
 				rs2.next();
 				stmt3.setInt(3, rs2.getInt("id"));
-				stmt3.setInt(4, (int)( 100 + (int)(Math.random() * (100 + 1))));
-				stmt3.setInt(5, (int)( 100 + (int)(Math.random() * (100 + 1))));
-				stmt3.setInt(6, (int)( 100 + (int)(Math.random() * (100 + 1))));
+				stmt3.setInt(4, (int)( 100 + (int)(Math.random() * (200 + 1))));
+				stmt3.setInt(5, (int)( 100 + (int)(Math.random() * (200 + 1))));
+				stmt3.setInt(6, (int)( 100 + (int)(Math.random() * (200 + 1))));
 				stmt3.executeUpdate();
 			}
 			conn.close();

@@ -6,14 +6,22 @@
 }
 .itemInfos > li {
     font-size: 20px;
+    height: 40px;
     padding-left: 10px;
     white-space: nowrap;
 }
-.itemInfos:hover {
+.itemInfos > li > img {
+    height: 40px;
+    padding-bottom: 3px;
+    box-sizing: border-box;
+}
+.itemInfos:hover,
+li.selected .itemInfos {
     color: white;
     background-color: black;
     cursor: pointer;
 }
+
 .itemInfos {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -29,19 +37,29 @@
 input {
     display: none;
 }
-.itemInfos:hover .itemPrice {
-    border-radius: 90px;
-    background-color: #0340C5;
-    width: 100%;
-    height: 110%;
-}
-li.selected .itemInfos {
-    color: white;
-    background-color: black;
-}
+.itemInfos:hover .itemPrice,
 li.selected .itemPrice {
-    border-radius: 90px;
     background-color: #0340C5;
+}
+
+li .itemPrice {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 90px;
     width: 100%;
-    height: 110%;
+    height: 40px;
+    transition: transform 0.1s ease-in-out, width 0.1s ease-in-out;
+}
+
+li.selected .itemPrice:hover {
+    transform: translateX(-20px);
+    width: calc(100% + 20px);
+}
+
+li .validPayement img {
+    height: 25px;
+    margin-left: 10px;
+    display: inline-block;
+    vertical-align: middle;
 }

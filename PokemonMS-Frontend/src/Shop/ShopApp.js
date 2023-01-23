@@ -41,7 +41,7 @@ class ShopApp extends React.Component {
       return (
           <li className={className} key={key}>
             <input type="radio" id={key} name="itm" value={key} checked={checked}/>
-            <ShopItem name={item.name} price={item.price} onClick={()=> this.selectItem(key)}/>
+            <ShopItem engName={item.engName} name={item.name} price={item.price} onClick={()=> this.selectItem(key)}/>
           </li>
       );
     });
@@ -70,23 +70,14 @@ class ShopApp extends React.Component {
             <ul>
               {list}
               <ul className="shopButton">
-                <li>
-                  <button className="payButton">
-                    <ul>
-                      <li>Payer</li>
-                      <li>{this.state.item_list[this.state.item_selected].price}P</li>
-                    </ul>
-                  </button>
-                </li>
                 <li><button className="rechargerButton">
                   <ul>
-                    <li>Recharger</li>
-                    <li>3500P</li>
+                    <li>Recharger 500 <img src="/pokedollars.png"/></li>
                   </ul>
                 </button></li>
               </ul>
               <div className="nameDescription"><h1>{this.state.item_list[this.state.item_selected].name}</h1></div>
-              <li className="itemDescription">{this.state.item_list[this.state.item_selected].description}</li>
+              <li className="itemDescription" title={this.state.item_list[this.state.item_selected].description}>{this.state.item_list[this.state.item_selected].description}</li>
             </ul>
           </div>
           <div className="shopSpriteDiv">
