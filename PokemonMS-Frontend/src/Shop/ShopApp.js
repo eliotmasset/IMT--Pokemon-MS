@@ -15,9 +15,9 @@ class ShopApp extends React.Component {
         {name:"oeuf commun", engName:"commonEgg", price:"150", description:"Ceci est un oeuf commun. Il permettra d’obtenir des pokémons de rareté commune tel que des Etourmis."},
         {name:"oeuf Rare", engName: "rareEgg",price:"250", description:"Ceci est un oeuf rare. Il permettra d’obtenir des pokémons de rareté rare tel que Carchacrok."},
         {name:"oeuf epique", engName: "epicEgg",price:"350", description:"Ceci est un oeuf épique. Il permettra d’obtenir des pokémons fabuleux ou légendaire tel que Arceus."},
-        {name:"carchacrok", engName:"garchomp", price:"100", description:"Ceci est un oeuf de Carchacrok."},
-        {name:"phylalie", engName:"leafeon", price:"150", description:"Ceci est un oeuf de Phylalie."},
-        {name:"giratina", engName:"giratina", price:"500", description:"Ceci est un oeuf de Giratina."},
+        {name:"darkrai", engName:"darkrai", price:"100", description:"Ceci est un oeuf de Carchacrok."},
+        {name:"dialga", engName:"dialga", price:"150", description:"Ceci est un oeuf de Phylalie."},
+        {name:"palkia", engName:"palkia", price:"500", description:"Ceci est un oeuf de Giratina."},
       ]
     }
   }
@@ -58,12 +58,22 @@ class ShopApp extends React.Component {
           <div className="itemList">
             <ul>
               {list}
-              <li><button className="rechargerButton">
-                <ul>
-                  <li>Recharger</li>
-                  <li>3500P</li>
-                </ul>
-              </button></li>
+              <ul className="shopButton">
+                <li>
+                  <button className="payButton">
+                    <ul>
+                      <li>Payer</li>
+                      <li>{this.state.item_list[this.state.item_selected].price}P</li>
+                    </ul>
+                  </button>
+                </li>
+                <li><button className="rechargerButton">
+                  <ul>
+                    <li>Recharger</li>
+                    <li>3500P</li>
+                  </ul>
+                </button></li>
+              </ul>
               <div className="nameDescription"><h1>{this.state.item_list[this.state.item_selected].name}</h1></div>
               <li className="itemDescription">{this.state.item_list[this.state.item_selected].description}</li>
             </ul>

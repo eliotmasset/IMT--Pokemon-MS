@@ -82,14 +82,49 @@
     color: #000000;
     padding-left: 60px;
 }
-.rechargerButton {
-    width: 300px;
-    height: 61.13px;
-    left: 913px;
-    top: 576px;
 
-    background: #D9D9D9;
-    border-radius: 10px;
+.rechargerButton:hover {
+    background-color: #374151;
+}
+
+.rechargerButton:focus {
+    box-shadow: none;
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+}
+
+@media (min-width: 768px) {
+    .rechargerButton {
+        padding: .75rem 1.5rem;
+    }
+}
+.rechargerButton, .payButton {
+    background-color: #D9D9D9;
+    border: 1px solid transparent;
+    border-radius: .75rem;
+    box-sizing: border-box;
+    color: #000000;
+    cursor: pointer;
+    flex: 0 0 auto;
+    font-family: "Inter var",ui-sans-serif,system-ui,-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+    font-size: 1.125rem;
+    font-weight: 600;
+    line-height: 1.5rem;
+    text-decoration: none #6B7280 solid;
+    text-decoration-thickness: auto;
+    transition-duration: .2s;
+    transition-property: background-color,border-color,color,fill,stroke;
+    transition-timing-function: cubic-bezier(.4, 0, 0.2, 1);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    padding: .75rem 1.2rem;
+    text-align: center;
+}
+
+.rechargerButton:hover, .payButton:hover {
+    background-color: #111827;
+    color: #FFFFFF;
 }
 
 @keyframes scaleShop {
@@ -103,4 +138,9 @@
         width: var(--width-app);
         transform: translateX(-700px);
     }
+}
+
+.shopButton {
+    display: flex;
+    justify-content: space-around;
 }
