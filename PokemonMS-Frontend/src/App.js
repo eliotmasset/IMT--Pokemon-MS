@@ -159,7 +159,7 @@ class App extends React.Component {
 
             <EggApp />
             <div className="flex-row flex-max-2">
-                <ProfileApp/>
+                <ProfileApp disconnect={(event) => this.disconnect(event)} />
                 <TeamApp />
                 <SettingsApp />
               <div className="temp-cube"/>

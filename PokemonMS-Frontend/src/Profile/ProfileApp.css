@@ -2,8 +2,6 @@
     width: 140px;
     height: 140px;
     border-radius: 25px;
-    backdrop-filter: blur(40px);
-    overflow: hidden;
     background-image: url("../../public/HomeIco/BlurProfile.png");
     background-size: cover;
     margin: 0;
@@ -12,3 +10,164 @@
     z-index: 0;
 }
 
+#ProfileApp.displayed {
+    z-index: 1;
+    transition: none;
+}
+
+#ProfileApp #ProfileWindow {
+    background: linear-gradient(143.73deg, rgba(246, 232, 232, 0.4) 15.9%, rgba(217, 217, 217, 0.1) 85.78%);
+    display: none;
+    position: absolute;
+    width: 140px;
+    height: 140px;
+    border-radius: 25px;
+    top: 0;
+    left: 0;
+    z-index: 3;
+}
+
+#ProfileApp.displayed #ProfileWindow {
+    display: block;
+    animation: scaleProfile 0.5s ease-in-out;
+    animation-fill-mode: forwards;
+    overflow: hidden;
+    color: black;
+}
+
+#backProfile {
+    background-color: white;
+    opacity: 0.9;
+    width: 100%;
+    height: 20%;
+    position: absolute;
+    top: 0;
+}
+
+#titleProfile{
+    padding-top: 1.5%;
+    padding-bottom: 4%;
+}
+
+#titleProfile h2{
+    color: black;
+    position: relative;
+    z-index: 2;
+    font-weight: normal;
+}
+
+.icoPoke {
+    position: absolute;
+    width: 10%;
+    z-index: 2;
+}
+
+.icoPoke:first-child {
+    left: 10%;
+}
+
+.icoPoke:nth-child(2){
+    right: 10%;
+}
+
+#contentProfile{
+    display: flex;
+    justify-content: center;
+    margin: 2% 0;
+}
+
+.oneContent{
+    width: 90%;
+    display: flex;
+    justify-content: space-between;
+    background: rgba(217, 217, 217, 0.7);
+    border-radius: 20px;
+    margin: 5% 5% 0 5%
+}
+
+.oneContent p:last-child {
+    font-weight: bold;
+}
+
+.oneContent p {
+    padding: 0 3%;
+    margin: 2% 0;
+    font-size: 1.5em;
+}
+
+#descDress{
+    display: flex;
+    flex-direction: column;
+    width: 60%;
+    height: 100%;
+}
+
+#icoDress{
+    width: 40%;
+    height: 100%;
+}
+
+#icoDress img{
+    width: 90%;
+    border-radius: 25px;
+}
+
+#buttonProfile {
+    display: flex;
+}
+#buttonProfile button {
+    width: 90%;
+    border-radius: 20px;
+    margin: 5% 5% 0 5%;
+    border: none;
+    padding: 2%;
+    text-align: center;
+    font-size: 1.5em;
+}
+
+#buttonProfile button:first-child{
+    background: rgba(130, 206, 222, 0.85);
+}
+
+#buttonProfile button:first-child:hover{
+    background: rgba(130, 206, 222, 1);
+}
+
+#buttonProfile button:last-child{
+    background: rgba(252, 109, 109, 0.85);
+}
+
+#buttonProfile button:last-child:hover{
+    background: rgba(252, 109, 109, 1);
+}
+
+
+#ProfileApp.displayed #backWall {
+    width: 200%;
+    height: 200%;
+    background: rgba(17, 17, 17, 0.3);
+    backdrop-filter: blur(12.5px);
+    z-index: 1;
+    display: none;
+    position: fixed;
+    left: -50%;
+    top: -50%;
+}
+
+
+@keyframes scaleProfile {
+    0% {
+        height: var(--height-app);
+        width: var(--width-app);
+        transform: translateX(-350px) translateY(-325px);
+        opacity: 0;
+
+    }
+    100% {
+        height: calc(var(--height-app) - 100%);
+        width: calc(var(--width-app) - 100%);
+        transform: translateX(calc(-350px + 10%)) translateY(calc(-325px + 15%));
+        backdrop-filter: blur(15px);
+        opacity: 1;
+    }
+}
