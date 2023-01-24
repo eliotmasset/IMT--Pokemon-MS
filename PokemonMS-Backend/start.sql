@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS Pokemon_type (  
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     name VARCHAR(255) NOT NULL,
-    english_name VARCHAR(255) NOT NULL,
+    english_name VARCHAR(255),
     description VARCHAR(255) NOT NULL,
     defense INT NOT NULL,
     attack INT NOT NULL,
