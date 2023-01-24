@@ -55,8 +55,7 @@ CREATE TABLE IF NOT EXISTS Tower (
     id_user INTEGER,
     floor INT,
     id_combat INTEGER,
-    FOREIGN KEY (id_user) REFERENCES User(id),
-    FOREIGN KEY (id_trainer) REFERENCES Trainer(id)
+    FOREIGN KEY (id_user) REFERENCES User(id)
 );
 
 CREATE TABLE IF NOT EXISTS Egg_type (
@@ -108,7 +107,6 @@ CREATE TABLE IF NOT EXISTS Store (
     FOREIGN KEY (id_pokemon_type_3) REFERENCES Pokemon_type(id)
 );
 
-<<<<<<< HEAD
 CREATE TABLE IF NOT EXISTS Combat (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     trainer_id INTEGER NOT NULL,
@@ -123,7 +121,7 @@ CREATE TABLE IF NOT EXISTS Combat_Pokemon (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     id_combat INTEGER NOT NULL,
     pv_pokemon INTEGER NOT NULL,
-    FOREIGN KEY (id_combat) procedure REFERENCES Combat(id),
+    FOREIGN KEY (id_combat) REFERENCES Combat(id)
 );
 
 INSERT OR REPLACE INTO "Egg_type" (id, type, price) VALUES (1, 'common', 200);
@@ -133,15 +131,6 @@ INSERT OR REPLACE INTO "Egg_type" (id, type, price) VALUES (3, 'epic', 500);
 INSERT OR REPLACE INTO "Incubator_type" (id, speed) VALUES (1, 'slow');
 INSERT OR REPLACE INTO "Incubator_type" (id, speed) VALUES (2, 'medium');
 INSERT OR REPLACE INTO "Incubator_type" (id, speed) VALUES (3, 'fast');
-
-INSERT OR REPLACE INTO "Tower_type" (id, difficulty, id_trainer) VALUES (1, 1, 1);
-INSERT OR REPLACE INTO "Tower_type" (id, difficulty, id_trainer) VALUES (2, 2, 1);
-INSERT OR REPLACE INTO "Tower_type" (id, difficulty, id_trainer) VALUES (3, 3, 1);
-INSERT OR REPLACE INTO "Tower_type" (id, difficulty, id_trainer) VALUES (4, 4, 1);
-INSERT OR REPLACE INTO "Tower_type" (id, difficulty, id_trainer) VALUES (5, 5, 1);
-INSERT OR REPLACE INTO "Tower_type" (id, difficulty, id_trainer) VALUES (6, 6, 1);
-INSERT OR REPLACE INTO "Tower_type" (id, difficulty, id_trainer) VALUES (7, 7, 1);
-INSERT OR REPLACE INTO "Tower_type" (id, difficulty, id_trainer) VALUES (8, 8, 1);
 
 INSERT OR REPLACE INTO 'Pokemon_type' (id, name, description, hp, attack, defense, speed, defense_special, attack_special, is_legendary) VALUES (1, 'Tortipouss', 'Son corps produit de l’oxygène par photosynthèse.La feuille sur sa tête flétrit quand il a soif.', 55,68,64,31,55,45,0);
 INSERT OR REPLACE INTO 'Pokemon_type' (id, name, description, hp, attack, defense, speed, defense_special, attack_special, is_legendary) VALUES (2, 'Boskara', 'Il sait d’instinct où trouver une source d’eau pure.Il y transporte d’autres Pokémon sur son dos.', 75,89,85,36,65,55,0);
