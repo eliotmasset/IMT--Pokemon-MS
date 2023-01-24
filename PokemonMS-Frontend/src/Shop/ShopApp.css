@@ -27,12 +27,70 @@
     left: 0;
     background-image:  url('../../public/boutique_background.png');
     background-size: 100% 100%;
+    display: block;
+    transform: translateX(0px) translateY(0px);
+    animation: unScaleShop 0.5s ease-in-out;
+    animation-fill-mode: forwards;
+    z-index: -1;
+    opacity: 0;
+}
+
+#ShopApp:not(.displayed) #ShopWindow {
+    transition: opacity 0.5s linear;
 }
 
 #ShopApp.displayed #ShopWindow {
-    display: block;
+    z-index: 10;
+    opacity: 1;
     animation: scaleShop 0.5s ease-in-out;
     animation-fill-mode: forwards;
+}
+
+#ShopApp #ShopWindow  > * {
+    opacity: 0;
+}
+
+#ShopApp.displayed #ShopWindow > * {
+    animation: showInsideShop 0.5s ease-in-out;
+    animation-fill-mode: forwards;
+}
+
+@keyframes scaleShop {
+    0% {
+        height: 300px;
+        width: 300px;
+        transform: translateX(0);
+    }
+    100% {
+        height: var(--height-app);
+        width: var(--width-app);
+        transform: translateX(-700px);
+    }
+}
+
+@keyframes unScaleShop {
+    0% {
+        height: var(--height-app);
+        width: var(--width-app);
+        transform: translateX(-700px);
+    }
+    100% {
+        height: 300px;
+        width: 300px;
+        transform: translateX(0) translateY(0);
+    }
+}
+
+@keyframes showInsideShop {
+    0% {
+        opacity: 0;
+    }
+    99% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
 }
 
 
@@ -162,19 +220,6 @@
 .payButton:hover {
     background-color: #111827;
     color: #ffff67;
-}
-
-@keyframes scaleShop {
-    0% {
-        height: 300px;
-        width: 300px;
-        transform: translateX(0);
-    }
-    100% {
-        height: var(--height-app);
-        width: var(--width-app);
-        transform: translateX(-700px);
-    }
 }
 
 .shopButton {
