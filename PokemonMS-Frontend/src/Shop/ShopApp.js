@@ -15,9 +15,9 @@ class ShopApp extends React.Component {
       money: 0,
       item_selected: 0,
       item_list : [
-        {name:"oeuf commun", engName:"commonEgg", price:"150", description:"Ceci est un oeuf commun. Il permettra d’obtenir des pokémons de rareté commune tel que des Etourmis."},
-        {name:"oeuf Rare", engName: "rareEgg",price:"250", description:"Ceci est un oeuf rare. Il permettra d’obtenir des pokémons de rareté rare tel que Carchacrok."},
-        {name:"oeuf epique", engName: "epicEgg",price:"350", description:"Ceci est un oeuf épique. Il permettra d’obtenir des pokémons fabuleux ou légendaire tel que Arceus."},
+        {name:"oeuf commun", engName:"commonEgg", price:"200", description:"Ceci est un oeuf commun. Il permettra d’obtenir des pokémons de rareté commune tel que des Etourmis."},
+        {name:"oeuf Rare", engName: "rareEgg",price:"350", description:"Ceci est un oeuf rare. Il permettra d’obtenir des pokémons de rareté rare tel que Carchacrok."},
+        {name:"oeuf epique", engName: "epicEgg",price:"500", description:"Ceci est un oeuf épique. Il permettra d’obtenir des pokémons fabuleux ou légendaire tel que Arceus."},
         {name:"", engName:"", price:"", description:""},
         {name:"", engName:"", price:"", description:""},
         {name:"", engName:"", price:"", description:""},
@@ -31,7 +31,6 @@ class ShopApp extends React.Component {
 
   selectItem(key) {
     this.setState({item_selected:key});
-    console.log(this.state.item_list[this.state.item_selected]);
   }
 
   async updateMoney() {
@@ -40,6 +39,31 @@ class ShopApp extends React.Component {
       if(money != this.state.money) {
         this.setState({money: money});
       }
+  }
+
+  async updateStore() {
+    let response = await fetch(ShopAdress + "/getStore?jwt_token=" + sessionStorage.getItem("jwt_token") + "&username=" + sessionStorage.getItem("username"));
+    let store = await response.json();
+    let new_state = [...this.state.item_list];
+    new_state[3] = store[0];
+    new_state[4] = store[1];
+    new_state[5] = store[2];
+    console.log(JSON.stringify(new_state));
+    console.log(JSON.stringify(this.state.item_list));
+    if(JSON.stringify(new_state) !== JSON.stringify(this.state.item_list)) this.setState({item_list: new_state});
+  }
+
+  async buyReload() {
+    let response = await fetch(ShopAdress + "/buyReload", {
+      method: 'POST',
+      body: JSON.stringify({
+        jwt_token: sessionStorage.getItem("jwt_token"),
+        username: sessionStorage.getItem("username")
+      })
+    });
+    response = await response.text();
+    alert(response);
+    this.updateStore();
   }
 
   render() {
@@ -57,16 +81,7 @@ class ShopApp extends React.Component {
     let className = "cardMenu";
     if(this.state.isDisplayed) className = "cardMenu displayed";
     this.updateMoney();
-
-    ( async () => {
-      let response = await fetch(ShopAdress + "/getStore?jwt_token=" + sessionStorage.getItem("jwt_token") + "&username=" + sessionStorage.getItem("username"));
-      let store = await response.json();
-      let new_state = this.state.item_list;
-      new_state[3] = store[0];
-      new_state[4] = store[1];
-      new_state[5] = store[2];
-      if(JSON.stringify(new_state) !== JSON.stringify(this.state.item_list)) this.setState({item_list: new_state});
-    })();
+    this.updateStore();
     let money = this.state.money;
 
     return (
@@ -84,7 +99,7 @@ class ShopApp extends React.Component {
             <ul>
               {list}
               <ul className="shopButton">
-                <li><button className="rechargerButton">
+                <li><button className="rechargerButton" onClick={() => this.buyReload()}>
                   <ul>
                     <li>Recharger 500 <img src="/pokedollars.png"/></li>
                   </ul>

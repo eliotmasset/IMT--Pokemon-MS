@@ -1,7 +1,7 @@
 import React from 'react';
 import './ShopItem.css';
 
-const transactionAddress = "http://localhost:8086";
+const shopAddress = "http://localhost:8084";
 
 export default class ShopItem extends React.Component {
 
@@ -17,14 +17,14 @@ export default class ShopItem extends React.Component {
         let username = sessionStorage.getItem("username");
         let jwt_token = sessionStorage.getItem("jwt_token");
         if(this.props.id <= 3) {
-            let response = await fetch(transactionAddress + "/buyEggInShop", { method: "POST", body: JSON.stringify({username: username, jwt_token: jwt_token, egg_type: this.props.id})});
+            let response = await fetch(shopAddress + "/buyEggInShop", { method: "POST", body: JSON.stringify({username: username, jwt_token: jwt_token, egg_type: this.props.id})});
             let data = await response.text();
             if(data !== undefined && data !== null && data !== "") {
                 if(data !== "Egg bought") alert(data);
                 else alert("You bought an egg !");
             } else alert("An error occured");
         } else {
-            let response = await fetch(transactionAddress + "/buyPokemonInShop", { method: "POST", body: JSON.stringify({username: username, jwt_token: jwt_token, pokemon_store: this.props.id - 3})});
+            let response = await fetch(shopAddress + "/buyPokemonInShop", { method: "POST", body: JSON.stringify({username: username, jwt_token: jwt_token, pokemon_store: this.props.id - 3})});
             let data = await response.text();
             if(data !== undefined && data !== null && data !== "") {
                 if(data !== "Egg bought") alert(data);

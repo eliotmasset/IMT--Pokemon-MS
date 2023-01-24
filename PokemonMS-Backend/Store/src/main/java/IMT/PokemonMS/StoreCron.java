@@ -10,7 +10,7 @@ import java.sql.DriverManager;
 @EnableScheduling
 class StoreCron  {
     
-	@Scheduled(cron = "0 * * * * *", zone = "Europe/Paris")	
+	@Scheduled(cron = "0 0 0 * * *", zone = "Europe/Paris")	
 	private void reloadStores() {
 		Connection conn = null;
 		try {
