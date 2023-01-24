@@ -181,13 +181,13 @@ h2 {
 
 #App .login {
   width: var(--width-app);
-  max-height: var(--height-app);
+  height: var(--height-app);
   position: absolute;
   left: 50%;
   top: 50%;
   padding: 60px 20px 60px 20px;
   transform: translate(-50%, -50%);
-  background: linear-gradient(143.73deg, rgba(246, 232, 232, 0.3) 15.9%, rgba(217, 217, 217, 0.1) 85.78%);
+  background: linear-gradient(143.73deg, rgba(246, 232, 232, 0.4) 15.9%, rgba(217, 217, 217, 0.1) 85.78%);
   backdrop-filter: blur(20px);
   border-radius: 15px;
   display: flex;
@@ -196,6 +196,8 @@ h2 {
   justify-content: start;
   gap: 20px;
   overflow: auto;
+  z-index: 1;
+  box-sizing: border-box;
 }
 
 #App .login h2 {
@@ -411,4 +413,25 @@ h2 {
 .cardMenu:hover .backdrop > img,
   .cardMenu:hover .backdrop > h2 {
   transform: scale(1.05);
+}
+
+
+.divPoke{
+  position: absolute;
+  z-index: -1;
+  width: var(--width-app);
+  height: var(--height-app);
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+  border-radius: 15px;
+}
+
+.behindPoke {
+  transform: rotate(45deg);
+  width: 45%;
+  position: absolute;
+  right: -15%;
+  bottom: -25%;
 }

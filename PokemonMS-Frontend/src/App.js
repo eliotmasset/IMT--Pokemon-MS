@@ -150,18 +150,17 @@ class App extends React.Component {
       <div id="App" className={className}>
         <div className="background"><div></div><div></div><div></div><div></div></div>
         <div className="flex-column">
+
           <div className="flex-row">
             <FightApp />
             <ShopApp />
           </div>
           <div className="flex-row">
+
             <EggApp />
             <div className="flex-row flex-max-2">
-                <ProfileApp />
-
+                <ProfileApp/>
                 <TeamApp />
-
-
                 <SettingsApp />
               <div className="temp-cube"/>
             </div>
@@ -174,6 +173,11 @@ class App extends React.Component {
     else if(!this.state.inscriptionPage) return (
       <div id="App">
         <div className="background"><div></div><div></div><div></div><div></div></div>
+
+        <div className="divPoke">
+          <img className="behindPoke" src="HomeIco/PokeIco.png"/>
+        </div>
+
         <div className="login">
           <form>
             <h2>Welcome</h2>
