@@ -42,7 +42,7 @@ class ShopApp extends React.Component {
       return (
           <li className={className} key={key}>
             <input type="radio" id={key} name="itm" value={key} checked={checked} readOnly/>
-            <ShopItem engName={item.engName} name={item.name} price={item.price} onClick={()=> this.selectItem(key)}/>
+            <ShopItem engName={item.engName} name={item.name} id={key + 1} price={item.price} onClick={()=> this.selectItem(key)}/>
           </li>
       );
     });

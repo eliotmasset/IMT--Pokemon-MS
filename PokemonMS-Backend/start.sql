@@ -69,14 +69,13 @@ CREATE TABLE IF NOT EXISTS Tower (
 CREATE TABLE IF NOT EXISTS Egg_type (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     type TEXT CHECK( type IN ('common', 'rare', 'epic') ) NOT NULL,
-    id_pokemon_type INTEGER,
-    FOREIGN KEY (id_pokemon_type) REFERENCES Pokemon_type(id)
+    price INTEGER
 );
 
 CREATE TABLE IF NOT EXISTS Egg (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     id_egg_type INTEGER NOT NULL,
-    id_pokemon_type INTEGER NOT NULL,
+    id_pokemon_type INTEGER,
     id_user INTEGER NOT NULL,
     time_to_incubate BIGINT NOT NULL,
     FOREIGN KEY (id_egg_type) REFERENCES Egg_type(id),
@@ -116,9 +115,9 @@ CREATE TABLE IF NOT EXISTS Store (
     FOREIGN KEY (id_pokemon_type_3) REFERENCES Pokemon_type(id)
 );
 
-INSERT OR REPLACE INTO "Egg_type" (id, type) VALUES (1, 'common');
-INSERT OR REPLACE INTO "Egg_type" (id, type) VALUES (2, 'rare');
-INSERT OR REPLACE INTO "Egg_type" (id, type) VALUES (3, 'epic');
+INSERT OR REPLACE INTO "Egg_type" (id, type, price) VALUES (1, 'common', 200);
+INSERT OR REPLACE INTO "Egg_type" (id, type, price) VALUES (2, 'rare', 350);
+INSERT OR REPLACE INTO "Egg_type" (id, type, price) VALUES (3, 'epic', 500);
 
 INSERT OR REPLACE INTO "Incubator_type" (id, speed) VALUES (1, 'slow');
 INSERT OR REPLACE INTO "Incubator_type" (id, speed) VALUES (2, 'medium');
