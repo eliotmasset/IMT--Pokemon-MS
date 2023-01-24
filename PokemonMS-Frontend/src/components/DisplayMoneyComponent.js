@@ -13,7 +13,7 @@ export default class DisplayMoney extends React.Component {
                         <img className="imgPokedollar" src="/pokedollars.png"/>
                     </li>
                     <li className="amountMoney">
-                        999999
+                        {this.props.money}
                     </li>
                 </ul>
             </div>

@@ -12,6 +12,7 @@ class ShopApp extends React.Component {
     super(props);
     this.state = {
       isDisplayed: false,
+      money: 0,
       item_selected: 0,
       item_list : [
         {name:"oeuf commun", engName:"commonEgg", price:"150", description:"Ceci est un oeuf commun. Il permettra d’obtenir des pokémons de rareté commune tel que des Etourmis."},
@@ -41,7 +42,7 @@ class ShopApp extends React.Component {
       return (
           <li className={className} key={key}>
             <input type="radio" id={key} name="itm" value={key} checked={checked} readOnly/>
-            <ShopItem engName={item.engName} name={item.name} price={item.price} onClick={()=> this.selectItem(key)}/>
+            <ShopItem engName={item.engName} name={item.name} id={key + 1} price={item.price} onClick={()=> this.selectItem(key)}/>
           </li>
       );
     });
@@ -56,6 +57,17 @@ class ShopApp extends React.Component {
       new_state[5] = store[2];
       if(JSON.stringify(new_state) !== JSON.stringify(this.state.item_list)) this.setState({item_list: new_state});
     })();
+
+    ( async () => {
+      let response = await fetch("http://localhost:8087" + "/GetMoney?jwt_token=" + sessionStorage.getItem("jwt_token"));
+      let money = await response.json();
+      if(money != this.state.money) {
+        this.setState({money: money});
+      }
+
+    })();
+    let money = this.state.money;
+
     return (
       <div id="ShopApp" className={className}>
         <div className="backdrop">
@@ -65,7 +77,7 @@ class ShopApp extends React.Component {
 
 
         <div id="ShopWindow">
-          <DisplayMoney></DisplayMoney>
+          <DisplayMoney money={this.state.money}></DisplayMoney>
           <div className="itemList">
             <ul>
               {list}
