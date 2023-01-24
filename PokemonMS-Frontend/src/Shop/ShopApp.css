@@ -25,7 +25,7 @@
     border-radius: 25px;
     top: 0;
     left: 0;
-    background-image:  url('../../public/boutique_background.png');
+    background-image:  url('../../public/shop_menu.png');
     background-size: 100% 100%;
     display: block;
     transform: translateX(0px) translateY(0px);
@@ -106,6 +106,7 @@
 }
 .shopSprite {
     width: 200px;
+    max-height: 400px;
 }
 .nameDescription {
     width: 540px;
@@ -232,4 +233,14 @@
 .shopButton li {
     width: 100%;
     padding-right: 10px;
+}
+
+#ShopApp #ShopWindow h3 {
+    position: absolute;
+    margin-top: 0;
+    right: 120px;
+    font-size: 70px;
+    color: black;
+    font-weight: 900;
+    font-style: italic;
 }

@@ -99,18 +99,18 @@ public class Transaction {
 		Connection conn = null;
 		try {
 			conn = Database.getConnection();
-			if(conn == null) return "Database connection failed";
+			if(conn == null) throw new Exception("Database connection failed");
 			var stmt = conn.prepareStatement("SELECT price FROM Egg_type WHERE id = ?");
 			stmt.setInt(1, egg_type);
 			var rs = stmt.executeQuery();
-			if(!rs.next()) return "Egg type not found";
+			if(!rs.next()) throw new Exception("Egg type not found");
 			int price = rs.getInt("price");
 			stmt = conn.prepareStatement("SELECT money FROM User WHERE username = ?");
 			stmt.setString(1, username);
 			rs = stmt.executeQuery();
-			if(!rs.next()) return "User not found";
+			if(!rs.next()) throw new Exception("User not found");
 			int money = rs.getInt("money");
-			if(money < price) return "Not enough money";
+			if(money < price) throw new Exception("Not enough money");
 			stmt = conn.prepareStatement("UPDATE User SET money = ? WHERE username = ?");
 			stmt.setInt(1, money - price);
 			stmt.setString(2, username);
@@ -125,7 +125,8 @@ public class Transaction {
 			conn.close();
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "An error occured";
+			conn.close();
+			return "An error occured : "+e.getMessage();
 		}
 		if(conn != null) {
 			try {
@@ -157,11 +158,11 @@ public class Transaction {
 		Connection conn = null;
 		try {
 			conn = Database.getConnection();
-			if(conn == null) return "Database connection failed";
+			if(conn == null) throw new Exception("Database connection failed");
 			var stmt = conn.prepareStatement("SELECT id_pokemon_type_1, price_1, id_pokemon_type_2, price_2, id_pokemon_type_3, price_3 FROM Store WHERE id_user = (SELECT id FROM User WHERE username = ?)");
 			stmt.setString(1, username);
 			var rs = stmt.executeQuery();
-			if(!rs.next()) return "Store not found";
+			if(!rs.next()) throw  new Exception("Store not found");
 			int id_pokemon_type = 0;
 			int price = 0;
 			if(pokemon_store == 1) {
@@ -177,9 +178,9 @@ public class Transaction {
 			stmt = conn.prepareStatement("SELECT money FROM User WHERE username = ?");
 			stmt.setString(1, username);
 			rs = stmt.executeQuery();
-			if(!rs.next()) return "User not found";
+			if(!rs.next()) throw  new Exception("User not found");
 			int money = rs.getInt("money");
-			if(money < price) return "Not enough money";
+			if(money < price) throw  new Exception("Not enough money");
 			stmt = conn.prepareStatement("UPDATE User SET money = ? WHERE username = ?");
 			stmt.setInt(1, money - price);
 			stmt.setString(2, username);
@@ -193,7 +194,8 @@ public class Transaction {
 			conn.close();
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "An error occured";
+			conn.close();
+			return "An error occured : " + e.getMessage();
 		}
 		if(conn != null) {
 			try {
@@ -206,5 +208,37 @@ public class Transaction {
 	}
 
 
+	@PostMapping("/buyReload")
+	public String buyReload(@RequestBody String body) {
+		String jwt_token = "";
+		String username = "";
+		try {
+			JSONObject json = (JSONObject) new org.json.simple.parser.JSONParser().parse(body);
+			jwt_token = (String) json.get("jwt_token");
+			username = (String) json.get("username");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "An error occured";
+		}
+		if(!isConnected(jwt_token, username)) return "You are not connected";
+		Connection conn = null;
+		try {
+			conn = Database.getConnection();
+			if(conn == null) return "Database connection failed";
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			conn.close();
+			return "An error occured";
+		}
+		if(conn != null) {
+			try {
+				conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return "Reload bought";
+	}
 
 }

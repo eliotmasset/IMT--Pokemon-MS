@@ -18,7 +18,7 @@ class StoreCron  {
 			if(conn == null) return;
 			var stmt = conn.prepareStatement("SELECT * FROM Store");
 			var rs = stmt.executeQuery();
-			var stmt2 = conn.prepareStatement("SELECT * FROM Pokemon_type ORDER BY RANDOM() LIMIT 3");
+			var stmt2 = conn.prepareStatement("SELECT * FROM Pokemon_type WHERE is_legendary=false ORDER BY RANDOM() LIMIT 3");
 			var rs2 = stmt2.executeQuery();
 			while(rs.next()) {
 				var stmt3 = conn.prepareStatement("UPDATE Store SET id_pokemon_type_1 = ?, id_pokemon_type_2 = ?, id_pokemon_type_3 = ?, price_1 = ?, price_2 = ?, price_3 = ?");

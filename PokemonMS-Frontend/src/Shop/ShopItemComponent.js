@@ -11,7 +11,9 @@ export default class ShopItem extends React.Component {
 
     async buy(event) {
         event.preventDefault();
-        if(!event.target.parentElement.parentElement.parentElement.parentElement.classList.contains("selected") && !event.target.parentElement.parentElement.parentElement.classList.contains("selected")) return;
+        if(!event.target.parentElement.parentElement.parentElement.parentElement.classList.contains("selected") 
+        && !event.target.parentElement.parentElement.parentElement.parentElement.parentElement.classList.contains("selected") 
+        && !event.target.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.classList.contains("selected")) return;
         let username = sessionStorage.getItem("username");
         let jwt_token = sessionStorage.getItem("jwt_token");
         if(this.props.id <= 3) {
@@ -29,6 +31,7 @@ export default class ShopItem extends React.Component {
                 else alert("You bought an egg !");
             } else alert("An error occured");
         }
+        this.props.updateMoney();
         return true;
     }
 

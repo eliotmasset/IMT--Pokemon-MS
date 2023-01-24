@@ -34,6 +34,14 @@ class ShopApp extends React.Component {
     console.log(this.state.item_list[this.state.item_selected]);
   }
 
+  async updateMoney() {
+    let response = await fetch("http://localhost:8087" + "/GetMoney?jwt_token=" + sessionStorage.getItem("jwt_token"));
+      let money = await response.json();
+      if(money != this.state.money) {
+        this.setState({money: money});
+      }
+  }
+
   render() {
     let list = this.state.item_list.map((item, key)=> {
       let className = "";
@@ -42,12 +50,14 @@ class ShopApp extends React.Component {
       return (
           <li className={className} key={key}>
             <input type="radio" id={key} name="itm" value={key} checked={checked} readOnly/>
-            <ShopItem engName={item.engName} name={item.name} id={key + 1} price={item.price} onClick={()=> this.selectItem(key)}/>
+            <ShopItem engName={item.engName} name={item.name} id={key + 1} price={item.price} onClick={()=> this.selectItem(key)} updateMoney={() => this.updateMoney()} />
           </li>
       );
     });
     let className = "cardMenu";
     if(this.state.isDisplayed) className = "cardMenu displayed";
+    this.updateMoney();
+
     ( async () => {
       let response = await fetch(ShopAdress + "/getStore?jwt_token=" + sessionStorage.getItem("jwt_token") + "&username=" + sessionStorage.getItem("username"));
       let store = await response.json();
@@ -56,15 +66,6 @@ class ShopApp extends React.Component {
       new_state[4] = store[1];
       new_state[5] = store[2];
       if(JSON.stringify(new_state) !== JSON.stringify(this.state.item_list)) this.setState({item_list: new_state});
-    })();
-
-    ( async () => {
-      let response = await fetch("http://localhost:8087" + "/GetMoney?jwt_token=" + sessionStorage.getItem("jwt_token"));
-      let money = await response.json();
-      if(money != this.state.money) {
-        this.setState({money: money});
-      }
-
     })();
     let money = this.state.money;
 
@@ -77,6 +78,7 @@ class ShopApp extends React.Component {
 
 
         <div id="ShopWindow">
+          <h3>SHOP</h3>
           <DisplayMoney money={this.state.money}></DisplayMoney>
           <div className="itemList">
             <ul>

@@ -123,10 +123,11 @@ public class User {
 			}
 
 			// Insert the store in the database
-			stmt = conn.prepareStatement("SELECT * FROM Pokemon_type ORDER BY RANDOM() LIMIT 3");
+			stmt = conn.prepareStatement("SELECT * FROM Pokemon_type WHERE is_legendary=false ORDER BY RANDOM() LIMIT 3");
 			rs = stmt.executeQuery();
 			query = "INSERT INTO Store (id_pokemon_type_1, id_pokemon_type_2, id_pokemon_type_3, price_1, price_2, price_3, id_user) VALUES (?, ?, ?, ?, ?, ?, ?)";
 			var stmt2 = conn.prepareStatement(query);
+			rs.next();
 			stmt2.setInt(1, rs.getInt("id"));
 			rs.next();
 			stmt2.setInt(2, rs.getInt("id"));
