@@ -50,20 +50,13 @@ CREATE TABLE IF NOT EXISTS User (
     FOREIGN KEY (id_trainer) REFERENCES Trainer(id)
 );
 
-CREATE TABLE IF NOT EXISTS Tower_type (
-    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    id_trainer INTEGER NOT NULL,
-    difficulty INT NOT NULL,
-    FOREIGN KEY (id_trainer) REFERENCES Trainer(id)
-);
-
 CREATE TABLE IF NOT EXISTS Tower (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    id_tower_type INTEGER NOT NULL,
     id_user INTEGER,
     floor INT,
-    FOREIGN KEY (id_tower_type) REFERENCES Tower_type(id),
-    FOREIGN KEY (id_user) REFERENCES User(id)
+    id_combat INTEGER,
+    FOREIGN KEY (id_user) REFERENCES User(id),
+    FOREIGN KEY (id_trainer) REFERENCES Trainer(id)
 );
 
 CREATE TABLE IF NOT EXISTS Egg_type (
@@ -115,6 +108,24 @@ CREATE TABLE IF NOT EXISTS Store (
     FOREIGN KEY (id_pokemon_type_2) REFERENCES Pokemon_type(id),
     FOREIGN KEY (id_pokemon_type_3) REFERENCES Pokemon_type(id)
 );
+
+CREATE TABLE IF NOT EXISTS Combat (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    trainer_id INTEGER NOT NULL,
+    user_id INTEGER NOT NULL,
+    trainerWinner BOOLEAN NOT NULL,
+    isFinished BOOLEAN NOT NULL,
+    FOREIGN KEY (trainer_id) REFERENCES Trainer(id),
+    FOREIGN KEY (user_id) REFERENCES User(id)
+);
+
+CREATE TABLE IF NOT EXISTS Combat_Pokemon (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    id_combat INTEGER NOT NULL,
+    pv_pokemon INTEGER NOT NULL,
+    FOREIGN KEY (id_combat) procedure REFERENCES Combat(id),
+);
+
 
 INSERT OR REPLACE INTO "Egg_type" (id, type) VALUES (1, 'common');
 INSERT OR REPLACE INTO "Egg_type" (id, type) VALUES (2, 'rare');
