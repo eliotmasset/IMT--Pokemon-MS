@@ -44,10 +44,12 @@
     transform: translateX(-510px) translateY(-325px);
     animation: scaleTeam 0.5s ease-in-out;
     animation-fill-mode: forwards;
+    display: block;
 }
 
 #TeamApp #TeamWindow  > * {
     opacity: 0;
+    display: none;
 }
 
 #TeamApp.displayed #TeamWindow > * {

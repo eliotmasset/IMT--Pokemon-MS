@@ -7,7 +7,7 @@ export default class DisplayMoney extends React.Component {
     }
     render() {
         return (
-            <div className="moneyDiv">
+            <div className="moneyDiv" onClick={() => this.props.onClick()}>
                 <ul>
                     <li>
                         <img className="imgPokedollar" src="/pokedollars.png"/>

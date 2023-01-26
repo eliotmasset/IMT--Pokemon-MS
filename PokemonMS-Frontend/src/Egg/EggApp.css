@@ -125,11 +125,12 @@
     align-items: center;
     box-sizing: border-box;
     filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
-    cursor: help;
+    cursor: pointer;
 }
 
-#Incubators .Incubator:not(.used) {
+#Incubators .Incubator:not(.displayIncubator) {
     justify-content: center;
+    cursor: help;
 }
 
 #Incubators .Incubator .IncubatorBar {
@@ -146,18 +147,18 @@
     width: 50%;
 }
 
-#Incubators .Incubator:not(.used) {
+#Incubators .Incubator:not(.displayIncubator) {
    background-color: #473D3D;
 }
 
 #Incubators .Incubator:not(.used) .IncubatorEgg,
-#Incubators .Incubator:not(.used) .IncubatorImg,
-#Incubators .Incubator:not(.used) h4:nth-of-type(1)
+#Incubators .Incubator:not(.displayIncubator) .IncubatorImg,
+#Incubators .Incubator:not(.displayIncubator) h4:nth-of-type(1)
  {
    display: none;
 }
 
-#Incubators .Incubator.used  h4:nth-of-type(2)
+#Incubators .Incubator.displayIncubator  h4:nth-of-type(2)
  {
    display: none;
 }
@@ -182,6 +183,7 @@
     color: white;
     margin: 0;
     z-index: 1;
+    margin-top: 20px!important;
 }
 
 #EggApp #EggWindow h3 {
@@ -192,4 +194,47 @@
     color: black;
     font-weight: 900;
     font-style: italic;
+}
+
+#EggApp .moneyDiv {
+    left: 100%!important;
+    top: 100%!important;
+    margin: 0!important;
+    transform: translate(calc(-100% - 30px), calc(-100% - 30px));
+}
+
+#EggApp .Incubator .moneyDiv {
+    outline: none;
+    border: none;
+    width: 100px;
+    height: 40px;
+    margin: 0;
+    position: relative!important;
+    border-radius: 7px;
+    left: 0%!important;
+    top: 0%!important;
+    margin-top: 10px!important;
+    transform: none!important;
+    cursor: pointer;
+}
+
+#EggApp .Incubator .imgPokedollar {
+    height: 70%;
+    margin: 0;
+    width: 70%;
+}
+
+#EggApp .Incubator ul {
+    padding: 5px;
+    margin: 0;
+}
+
+#EggApp .Incubator .amountMoney {
+  position: absolute;
+  width: 50px;
+  height: 40px;
+  left: 40px;
+  top: -10px;
+  font-size: 16px;
+  text-align: left;
 }

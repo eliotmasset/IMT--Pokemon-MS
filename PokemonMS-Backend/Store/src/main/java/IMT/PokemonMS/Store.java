@@ -35,6 +35,8 @@ public class Store {
 
 	private static byte[] keyHMAC = "f032932c1cebbd5d6e2b6b48e45ea772f80e998b32dcc21f74ac1b3adf197871".getBytes();
 
+	private static int[] pricesIncubators = {0, 100, 1000, 10000, 500000, 1000000};
+
 	public static void main(String[] args) {
 		SpringApplication.run(Store.class, args);
 	}
@@ -325,6 +327,67 @@ public class Store {
 			}
 		}
 		return "Reload bought";
+	}
+
+	@PostMapping("/buyIncubator")
+	public String buyIncubator(@RequestBody String body) {
+		String jwt_token = "";
+		String username = "";
+		try {
+			JSONObject json = (JSONObject) new org.json.simple.parser.JSONParser().parse(body);
+			jwt_token = (String) json.get("jwt_token");
+			username = (String) json.get("username");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "An error occured";
+		}
+		if(!isConnected(jwt_token, username)) return "You are not connected";
+		Connection conn = null;
+		try {
+			conn = Database.getConnection();
+			if(conn == null) return "Database connection failed";
+			var stmt = conn.prepareStatement("SELECT money FROM User WHERE username = ?");
+			stmt.setString(1, username);
+			var rs = stmt.executeQuery();
+			if(!rs.next()) throw  new Exception("User not found");
+			int money = rs.getInt("money");
+			stmt = conn.prepareStatement("SELECT COUNT(*) as count FROM Incubator WHERE id_user = (SELECT id FROM User WHERE username = ?)");
+			stmt.setString(1, username);
+			rs = stmt.executeQuery();
+			int price = 0;
+			int numberIncubator = rs.getInt("count");
+			if(numberIncubator < pricesIncubators.length) price = pricesIncubators[numberIncubator];
+			else price = pricesIncubators[pricesIncubators.length - 1];
+			
+			if(money < price) throw new Exception("Not enough money");
+			stmt = conn.prepareStatement("UPDATE User SET money = ? WHERE username = ?");
+			stmt.setInt(1, money - price);
+			stmt.setString(2, username);
+			stmt.executeUpdate();
+
+			stmt = conn.prepareStatement("INSERT INTO Incubator (id_incubator_type, id_egg, id_user, start_date_time) VALUES (1, NULL, (SELECT id FROM User WHERE username = ?), NULL)");
+			stmt.setString(1, username);
+			stmt.executeUpdate();
+			
+			conn.close();
+		} catch (Exception e) {
+			if(conn != null) {
+				try {
+					conn.close();
+				} catch (Exception e2) {
+					e2.printStackTrace();
+				}
+			}
+			return e.getMessage();
+		}
+		if(conn != null) {
+			try {
+				conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return "Incubator bought";
 	}
 
 }

@@ -48,8 +48,6 @@ class ShopApp extends React.Component {
     new_state[3] = store[0];
     new_state[4] = store[1];
     new_state[5] = store[2];
-    console.log(JSON.stringify(new_state));
-    console.log(JSON.stringify(this.state.item_list));
     if(JSON.stringify(new_state) !== JSON.stringify(this.state.item_list)) this.setState({item_list: new_state});
   }
 

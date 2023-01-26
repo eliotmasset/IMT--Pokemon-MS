@@ -7,6 +7,7 @@ import FarmApp from './Farm/FarmApp';
 import ProfileApp from './Profile/ProfileApp';
 import SettingsApp from './Settings/SettingsApp';
 import TeamApp from './Team/TeamApp';
+import AudioComponent from './components/AudioComponent';
 
 import React from 'react';
 
@@ -148,6 +149,7 @@ class App extends React.Component {
 
     if(!this.state.jwt_token_is_verified || (this.state.connected && this.state.jwt_token_is_verified)) return (
       <div id="App" className={className}>
+        <AudioComponent src="main.mp3" />
         <div className="background"><div></div><div></div><div></div><div></div></div>
         <div className="flex-column">
 
@@ -172,6 +174,7 @@ class App extends React.Component {
     );
     else if(!this.state.inscriptionPage) return (
       <div id="App">
+        <AudioComponent src="main.mp3" />
         <div className="background"><div></div><div></div><div></div><div></div></div>
 
         <div className="divPoke">
@@ -194,6 +197,7 @@ class App extends React.Component {
     );
     else if(this.state.inscriptionPage) return (
       <div id="App">
+        <AudioComponent src="main.mp3" />
         <div className="background"><div></div><div></div><div></div><div></div></div>
         <div className="login">
           <form>
