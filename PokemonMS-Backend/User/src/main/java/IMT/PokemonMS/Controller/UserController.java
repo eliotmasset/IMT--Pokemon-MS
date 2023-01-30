@@ -74,152 +74,221 @@ public class UserController {
     }
 
     @GetMapping("/connected")
-    public Boolean connected(@RequestParam("jwt_token") String jwt_token, @RequestParam("username") String username) {
-        return isValidToken(jwt_token, username);
+    public JSONObject connected(@RequestParam("jwt_token") String jwt_token, @RequestParam("username") String username) {
+        JSONObject response = new JSONObject();
+        response.put("status", "success");
+        response.put("message", "User not connected");
+        response.put("response", false);
+        if(isValidToken(jwt_token, username)) {
+            response.put("message", "User connected");
+            response.put("response", true);
+        }
+        return response;
     }
 
     @PostMapping("/subscribe")
-    public String subscribe(@RequestBody String body) {
-		String username = "";
-        String password = "";
-        Boolean gender = false;
+    public JSONObject subscribe(@RequestBody String body) {
+        JSONObject response = new JSONObject();
+        response.put("status", "error");
+        response.put("message", "An error occured");
+        response.put("response", "");
 		try {
-			JSONObject json = (JSONObject) new org.json.simple.parser.JSONParser().parse(body);
-			username = (String) json.get("username");
-            password = (String) json.get("password");
-            gender = (Boolean) json.get("gender");
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "An error occured";
-		}
-        User userExists = userRepository.findByUsername(username);
-        if (userExists != null) {
-            return "Error : Username already exists";
-        }
-        //Hash Password
-        String salt = nextString();
-        char[] passwordChars = password.toCharArray();
-        byte[] saltBytes = salt.getBytes();
-        byte[] hashedBytes = hashPassword(passwordChars, saltBytes, iterations, keyLength);
-        String hashedString = Hex.encodeHexString(hashedBytes);
-        User user = new User();
-        user.setUsername(username);
-        user.setGender(gender);
-        user.setMoney(10000);
-        user.setPassword(hashedString);
-        user.setSalt(salt.toString());
-        userRepository.save(user);
+            String username = "";
+            String password = "";
+            Boolean gender = false;
+            try {
+                JSONObject json = (JSONObject) new org.json.simple.parser.JSONParser().parse(body);
+                username = (String) json.get("username");
+                password = (String) json.get("password");
+                gender = ((Boolean) json.get("gender") ? true : false);
 
-        String jwt_token = Jwts.builder()
-            .setSubject(username)
-            .claim("id", user.getId())
-            .claim("username", username)
-            .claim("end_date", System.currentTimeMillis() + (1000 * 60 * 60 * 24 * 7))
-            .signWith(Keys.hmacShaKeyFor(keyHMAC), SignatureAlgorithm.HS256)
-            .compact();
-        return jwt_token;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return response;
+            }
+            User userExists = userRepository.findByUsername(username);
+            if (userExists != null) {
+                response.put("message", "User already exists");
+                return response;
+            }
+            //Hash Password
+            String salt = nextString();
+            char[] passwordChars = password.toCharArray();
+            byte[] saltBytes = salt.getBytes();
+            byte[] hashedBytes = hashPassword(passwordChars, saltBytes, iterations, keyLength);
+            String hashedString = Hex.encodeHexString(hashedBytes);
+            User user = new User();
+            user.setUsername(username);
+            user.setGender(gender);
+            user.setMoney(10000);
+            user.setPassword(hashedString);
+            user.setSalt(salt.toString());
+            userRepository.save(user);
+
+            String jwt_token = Jwts.builder()
+                .setSubject(username)
+                .claim("id", user.getId())
+                .claim("username", username)
+                .claim("end_date", System.currentTimeMillis() + (1000 * 60 * 60 * 24 * 7))
+                .signWith(Keys.hmacShaKeyFor(keyHMAC), SignatureAlgorithm.HS256)
+                .compact();
+            response.put("response", jwt_token);
+        } catch (Exception e) {
+            return response;
+        }
+        response.put("status", "success");
+        response.put("message", "User created");
+        return response;
     }
 
     @PostMapping("/connect")
-    public String connect(@RequestBody String body) {
-        String username = "";
-        String password = "";
-        try {
-            JSONObject json = (JSONObject) new org.json.simple.parser.JSONParser().parse(body);
-            username = (String) json.get("username");
-            password = (String) json.get("password");
+    public JSONObject connect(@RequestBody String body) {
+        JSONObject response = new JSONObject();
+        response.put("status", "error");
+        response.put("message", "An error occured");
+        response.put("response", "");
+		try {
+            String username = "";
+            String password = "";
+            try {
+                JSONObject json = (JSONObject) new org.json.simple.parser.JSONParser().parse(body);
+                username = (String) json.get("username");
+                password = (String) json.get("password");
+            } catch (Exception e) {
+                e.printStackTrace();
+                return response;
+            }
+            User user = userRepository.findByUsername(username);
+            if (user == null) {
+                response.put("message", "User not found");
+                return response;
+            }
+            //Hash Password
+            char[] passwordChars = password.toCharArray();
+            byte[] saltBytes = user.getSalt().getBytes();
+            byte[] hashedBytes = hashPassword(passwordChars, saltBytes, iterations, keyLength);
+            String hashedString = Hex.encodeHexString(hashedBytes);
+
+            if(!hashedString.equals(user.getPassword())) {
+                response.put("message", "Wrong password");
+                return response;
+            }
+
+            String jwt_token = Jwts.builder()
+                .setSubject(username)
+                .claim("id", user.getId())
+                .claim("username", username)
+                .claim("end_date", System.currentTimeMillis() + (1000 * 60 * 60 * 24 * 7))
+                .signWith(Keys.hmacShaKeyFor(keyHMAC), SignatureAlgorithm.HS256)
+                .compact();
+            response.put("response", jwt_token);
         } catch (Exception e) {
-            e.printStackTrace();
-            return "Error: An error occured";
+            return response;
         }
-        User user = userRepository.findByUsername(username);
-        if (user == null) {
-            return "Error : Username doesn't exist";
-        }
-        //Hash Password
-        char[] passwordChars = password.toCharArray();
-        byte[] saltBytes = user.getSalt().getBytes();
-        byte[] hashedBytes = hashPassword(passwordChars, saltBytes, iterations, keyLength);
-        String hashedString = Hex.encodeHexString(hashedBytes);
-
-        if(!hashedString.equals(user.getPassword())) {
-            return "Error: Wrong password";
-        }
-
-        String jwt_token = Jwts.builder()
-            .setSubject(username)
-            .claim("id", user.getId())
-            .claim("username", username)
-            .claim("end_date", System.currentTimeMillis() + (1000 * 60 * 60 * 24 * 7))
-            .signWith(Keys.hmacShaKeyFor(keyHMAC), SignatureAlgorithm.HS256)
-            .compact();
-        return jwt_token;
+        response.put("status", "success");
+        response.put("message", "User connected");
+        return response;
     }
 
     @GetMapping("/getMoney")
-    public Integer getMoney(@RequestParam("jwt_token") String jwt_token, @RequestParam("username") String username) {
-        if(isValidToken(jwt_token, username)) {
-            User user = userRepository.findByUsername(username);
-            return user.getMoney();
+    public JSONObject getMoney(@RequestParam("jwt_token") String jwt_token, @RequestParam("username") String username) {
+        JSONObject response = new JSONObject();
+        response.put("status", "error");
+        response.put("message", "An error occured");
+        response.put("response", -1);
+		try {
+            if(isValidToken(jwt_token, username)) {
+                User user = userRepository.findByUsername(username);
+                response.put("response", user.getMoney());
+            } else {
+                response.put("message", "Invalid token");
+                return response;
+            }
+        } catch (Exception e) {
+            return response;
         }
-        return -1;
+        response.put("status", "success");
+        response.put("message", "Success");
+        return response;
     }
 
     @PostMapping("/addMoney")
-    public String addMoney(@RequestBody String body) {
-        String identifier = "";
-        String username = "";
-        Integer money = 0;
+    public JSONObject addMoney(@RequestBody String body) {
+        JSONObject response = new JSONObject();
+        response.put("status", "error");
+        response.put("message", "An error occured");
+        response.put("response", "");
         try {
-            JSONObject json = (JSONObject) new org.json.simple.parser.JSONParser().parse(body);
-            identifier = (String) json.get("identifier");
-            username = (String) json.get("username");
-			money = Math.toIntExact((Long) json.get("money"));
+            String identifier = "";
+            String username = "";
+            Integer money = 0;
+            try {
+                JSONObject json = (JSONObject) new org.json.simple.parser.JSONParser().parse(body);
+                identifier = (String) json.get("identifier");
+                username = (String) json.get("username");
+                money = Math.toIntExact((Long) json.get("money"));
+            } catch (Exception e) {
+                e.printStackTrace();
+                return response;
+            }
+    
+            User userExists = userRepository.findByUsername(username);
+            if (userExists == null) {
+                response.put("message", "User not found");
+                return response;
+            }
+            if (identifier.equals(new String(this.identifier))) {
+                User user = userRepository.findByUsername(username);
+                user.setMoney(user.getMoney() + money);
+                userRepository.save(user);
+                response.put("status", "success");
+            }
         } catch (Exception e) {
-            e.printStackTrace();
-            return "Error: An error occured";
+            return response;
         }
-
-        User userExists = userRepository.findByUsername(username);
-        if (userExists == null) {
-            return "Error : Username doesn't exist";
-        }
-
-        if (identifier.equals(new String(this.identifier))) {
-            User user = userRepository.findByUsername(username);
-            user.setMoney(user.getMoney() + money);
-            userRepository.save(user);
-            return "Success";
-        }
-        return "Error";
+        response.put("message", "Success");
+        return response;
     }
 
     @PostMapping("/removeMoney")
-    public String removeMoney(@RequestBody String body) {
-        String identifier = "";
-        String username = "";
-        Integer money = 0;
+    public JSONObject removeMoney(@RequestBody String body) {
+        JSONObject response = new JSONObject();
+        response.put("status", "error");
+        response.put("message", "An error occured");
+        response.put("response", "");
         try {
-            JSONObject json = (JSONObject) new org.json.simple.parser.JSONParser().parse(body);
-            identifier = (String) json.get("identifier");
-            username = (String) json.get("username");
-            money = Math.toIntExact((Long) json.get("money"));
+            String identifier = "";
+            String username = "";
+            Integer money = 0;
+            try {
+                JSONObject json = (JSONObject) new org.json.simple.parser.JSONParser().parse(body);
+                identifier = (String) json.get("identifier");
+                username = (String) json.get("username");
+                money = Math.toIntExact((Long) json.get("money"));
+            } catch (Exception e) {
+                e.printStackTrace();
+                return response;
+            }
+    
+            User userExists = userRepository.findByUsername(username);
+            if (userExists == null) {
+                response.put("message", "User not found");
+                return response;
+            }
+            if (identifier.equals(new String(this.identifier))) {
+                User user = userRepository.findByUsername(username);
+                if(user.getMoney() < money) {
+                    response.put("message", "Not enough money");
+                    return response;
+                }
+                user.setMoney(user.getMoney() - money);
+                userRepository.save(user);
+                response.put("status", "success");
+            }
         } catch (Exception e) {
-            e.printStackTrace();
-            return "Error: An error occured";
+            return response;
         }
-
-        User userExists = userRepository.findByUsername(username);
-        if (userExists == null) {
-            return "Error : Username doesn't exist";
-        }
-        
-        if (identifier.equals(new String(this.identifier))) {
-            User user = userRepository.findByUsername(username);
-            user.setMoney(user.getMoney() - money);
-            userRepository.save(user);
-            return "Success";
-        }
-        return "Error";
+        response.put("message", "Success");
+        return response;
     }
 }

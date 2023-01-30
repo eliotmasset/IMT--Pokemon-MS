@@ -11,7 +11,7 @@ import AudioComponent from './components/AudioComponent';
 
 import React from 'react';
 
-const UserAdress = "http://localhost:8087";
+const UserAdress = "http://localhost:8087/user";
 
 class App extends React.Component {
   constructor(props) {
@@ -34,25 +34,31 @@ class App extends React.Component {
     let formData = new FormData(form);
     let username = formData.get("username");
     let password = formData.get("password");
-    let response = await fetch(UserAdress + "/Connect?username=" + username + "&password=" + password);
+    let response = await fetch(UserAdress + "/connect", {
+      method: 'POST',
+      body: JSON.stringify({
+        username: username,
+        password: password
+      })
+    });
     if(response === undefined || response === null) {
       alert("An error occured");
       button.classList.remove("loadingButton");
       button.innerHTML = lastHTML;
       return false;
     }
-    let data = await response.text();
-    if(data !== undefined && data !== null && data !== "" && data.slice(0, 5) !== "Error") {
-      sessionStorage.setItem("jwt_token", data);
+    let data = await response.json();
+    if(data !== undefined && data !== null && data.status === "success") {
+      sessionStorage.setItem("jwt_token", data.response);
       sessionStorage.setItem("username", username);
-      response = await fetch(UserAdress + "/Connected?jwt_token=" + sessionStorage.getItem("jwt_token") + "&username=" + username);
-      data = await response.text();
-      if(data == "true" && this.state.connected == false) this.setState({connected: true, jwt_token_is_verified: true});
-      else if(data == "false" && this.state.connected == true) this.setState({connected: false, jwt_token_is_verified: true});
+      response = await fetch(UserAdress + "/connected?jwt_token=" + sessionStorage.getItem("jwt_token") + "&username=" + username);
+      data = await response.json();
+      if(data.response == true && this.state.connected == false) this.setState({connected: true, jwt_token_is_verified: true});
+      else if(data.response == false && this.state.connected == true) this.setState({connected: false, jwt_token_is_verified: true});
       else if(this.state.jwt_token_is_verified == false) this.setState({jwt_token_is_verified: true});
     } else {
       document.querySelectorAll("input[type='password']").forEach((input) => input.value = "");
-      if(data !== undefined && data !== null && data !== "") alert(data.slice(6));
+      if(data !== undefined && data !== null && data.message !== "") alert(data.message);
       else alert("An error occured");
     }
     button.innerHTML = lastHTML;
@@ -89,25 +95,32 @@ class App extends React.Component {
       return false;
     }
 
-    let response = await fetch(UserAdress + "/Subscribe?username=" + username + "&password=" + password + "&gender="+(gender ? 1 : 0));
+    let response = await fetch(UserAdress + "/subscribe", {
+      method: 'POST',
+      body: JSON.stringify({
+        username: username,
+        password: password,
+        gender: gender ? true : false
+      })
+    });
     if(response === undefined || response === null) {
       alert("An error occured");
       button.classList.remove("loadingButton");
       button.innerHTML = lastHTML;
       return false;
     }
-    let data = await response.text();
-    if(data !== undefined && data !== null && data !== "" && data.slice(0, 5) !== "Error") {
-      sessionStorage.setItem("jwt_token", data);
+    let data = await response.json();
+    if(data !== undefined && data !== null && data.status === "success") {
+      sessionStorage.setItem("jwt_token", data.response);
       sessionStorage.setItem("username", username);
-      response = await fetch(UserAdress + "/Connected?jwt_token=" + sessionStorage.getItem("jwt_token") + "&username=" + username);
-      data = await response.text();
-      if(data == "true" && this.state.connected == false) this.setState({connected: true, jwt_token_is_verified: true});
-      else if(data == "false" && this.state.connected == true) this.setState({connected: false, jwt_token_is_verified: true});
+      response = await fetch(UserAdress + "/connected?jwt_token=" + sessionStorage.getItem("jwt_token") + "&username=" + username);
+      data = await response.json();
+      if(data.response == true && this.state.connected == false) this.setState({connected: true, jwt_token_is_verified: true});
+      else if(data.response == false && this.state.connected == true) this.setState({connected: false, jwt_token_is_verified: true});
       else if(this.state.jwt_token_is_verified == false) this.setState({jwt_token_is_verified: true});
     } else {
       document.querySelectorAll("input[type='password']").forEach((input) => input.value = "");
-      if(data !== undefined && data !== null && data !== "") alert(data.slice(6));
+      if(data !== undefined && data !== null && data.message !== "") alert(data.message);
       else alert("An error occured");
     }
     button.classList.remove("loadingButton");
@@ -132,13 +145,17 @@ class App extends React.Component {
     ( async () => {
         if(sessionStorage.getItem("jwt_token") !== undefined && sessionStorage.getItem("jwt_token") !== null && sessionStorage.getItem("jwt_token") !== "") {
           try {
-            let response = await fetch(UserAdress + "/Connected?jwt_token=" + sessionStorage.getItem("jwt_token") + "&username=" + sessionStorage.getItem("username"));
-            let data = await response.text();
-            if(data == "true" && this.state.connected == false) this.setState({connected: true, jwt_token_is_verified: true});
-            else if(data == "false" && this.state.connected == true) this.setState({connected: false, jwt_token_is_verified: true});
+            let response = await fetch(UserAdress + "/connected?jwt_token=" + sessionStorage.getItem("jwt_token") + "&username=" + sessionStorage.getItem("username"));
+            let data = await response.json();
+            if(data.response == true && this.state.connected == false) this.setState({connected: true, jwt_token_is_verified: true});
+            else if(data.response == false && this.state.connected == true) this.setState({connected: false, jwt_token_is_verified: true});
             else if(this.state.jwt_token_is_verified == false) this.setState({jwt_token_is_verified: true});
           } catch(e) {
-            this.setState({connected: false, jwt_token_is_verified: true});
+            //execute in 2 seconds
+            (async () => {
+              await new Promise(resolve => setTimeout(resolve, 2000));
+              this.setState({connected: false, jwt_token_is_verified: true});
+            })();
             console.log(e);
           }
         } else if(this.state.jwt_token_is_verified == false) this.setState({connected: false, jwt_token_is_verified: true});

@@ -22,6 +22,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -80,7 +81,10 @@ public class IncubationController {
             HttpResponse response = httpclient.execute(httppost);
             if (response.getStatusLine().getStatusCode() != 200) return false;
             String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
-            if(!responseString.equals("Success")) return false;
+            JSONParser parser = new JSONParser();
+            JSONObject responseJson = new JSONObject();
+            responseJson = (JSONObject) parser.parse(responseString);
+            if(!responseJson.get("status").equals("success")) return false;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
