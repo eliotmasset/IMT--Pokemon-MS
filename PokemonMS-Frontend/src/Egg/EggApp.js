@@ -4,8 +4,8 @@ import BackButtonComponent from '../components/BackButtonComponent';
 import ChooseEgg from './ChooseEgg';
 import DisplayMoney from '../components/DisplayMoneyComponent';
 
-const IncubatorAdress = "http://localhost:8082";
-const ShopAddress = "http://localhost:8084";
+const IncubatorAdress = "http://localhost:8082/incubation";
+const userAdress = "http://localhost:8087/user";
 
 class EggApp extends React.Component {
   
@@ -27,43 +27,40 @@ class EggApp extends React.Component {
     this.setState({isDisplayed: isDisplayed, last_update: new Date()});
   }
 
-  setChooseEggDisplayed(isDisplayed, valid, incubatorId) {
-    if(valid) this.setState({isChooseEggDisplayed: isDisplayed, incubatorId: incubatorId, last_update: new Date()});
+  setChooseEggDisplayed(isDisplayed, incubatorId) {
+    this.setState({isChooseEggDisplayed: isDisplayed, incubatorId: incubatorId, last_update: new Date()});
   }
 
-  getPercentFromIncubator(incubator) {
+  getPercentFromIncubator(incubator, endDate) {
     let percent = 0;
-    if(incubator.isUsed) {
-      let now = new Date();
-      if(!incubator.startDate) return percent;
-      if(!incubator.endDate) return percent;
-      let startDate = new Date(incubator.startDate);
-      let endDate = new Date(incubator.endDate);
-      if(now.getTime() > endDate.getTime()) return 100;
-      let duration = endDate.getTime() - startDate.getTime();
-      let elapsed = now.getTime() - startDate.getTime();
-      percent = elapsed / duration * 100;
-      if(percent > 100) percent = 100;
-      if(percent < 0) percent = 0;
-    }
+    let now = new Date();
+    if(!incubator.start_date_time) return percent;
+    if(!endDate) return percent;
+    let start_date_time = new Date(incubator.start_date_time);
+    if(now.getTime() > endDate.getTime()) return 100;
+    let duration = endDate.getTime() - start_date_time.getTime();
+    let elapsed = now.getTime() - start_date_time.getTime();
+    percent = elapsed / duration * 100;
+    if(percent > 100) percent = 100;
+    if(percent < 0) percent = 0;
     return percent;
   }
   
   async updateMoney() {
-    let response = await fetch("http://localhost:8087" + "/GetMoney?jwt_token=" + sessionStorage.getItem("jwt_token"));
-    let money = await response.json();
-    if(money != this.state.money) {
-      this.setState({money: money, last_update: new Date()});
+    let response = await fetch(userAdress + "/getMoney?jwt_token=" + sessionStorage.getItem("jwt_token") + "&username=" + sessionStorage.getItem("username"));
+    let data = await response.json();
+    if(data !== undefined && data !== null && data.response != this.state.money) {
+      this.setState({money: data.response, last_update: new Date()});
     }
   }
 
   async buyIncubator() {
     let username = sessionStorage.getItem("username");
     let jwt_token = sessionStorage.getItem("jwt_token");
-    let response = await fetch(ShopAddress + "/buyIncubator", { method: "POST", body: JSON.stringify({username: username, jwt_token: jwt_token})});
-    let data = await response.text();
-    if(data !== undefined && data !== null && data !== "") {
-        if(data !== "Incubator bought") alert(data);
+    let response = await fetch(IncubatorAdress + "/buyIncubator", { method: "POST", body: JSON.stringify({username: username, jwt_token: jwt_token})});
+    let data = await response.json();
+    if(data !== undefined && data !== null && data.status !== "") {
+        if(data.status !== "success") alert(data.message);
         else alert("You bought an incubator !");
     } else alert("An error occured");
     this.updateIncubators();
@@ -71,8 +68,8 @@ class EggApp extends React.Component {
 
   async updateIncubators() {
     let response = await fetch(IncubatorAdress + "/getIncubatorList?jwt_token=" + sessionStorage.getItem("jwt_token") + "&username=" + sessionStorage.getItem("username"));
-    let incubators = await response.json();
-    if(JSON.stringify(incubators) !== JSON.stringify(this.state.incubators)) this.setState({incubators: incubators, last_update: new Date()});
+    let data = await response.json();
+    if(JSON.stringify(data.response) !== JSON.stringify(this.state.incubators)) this.setState({incubators: data.response, last_update: new Date()});
   }
 
   componentDidMount() {
@@ -99,30 +96,33 @@ class EggApp extends React.Component {
           <BackButtonComponent onClick={() => this.setIsDisplayed(false)}></BackButtonComponent>
           <div id="Incubators">
             {this.state.incubators.map((incubator, index) => {
-              let percent = this.getPercentFromIncubator(incubator);
               let className = "Incubator";
-              if(incubator.isUsed) className += " used";
+              let endDate = null;
+              if(incubator.start_date_time && incubator.egg) endDate = new Date(new Date(incubator.start_date_time).getTime() + (incubator.egg.time_to_incubate*1000));
+              let percent = this.getPercentFromIncubator(incubator, endDate);
+              if(incubator.egg) className += " used";
               if(incubator.price === null) className += " displayIncubator";
               let img_filename = "Egg_2k.webp";
-              if(incubator.eggType === "rare") img_filename = "Egg_5k.webp";
-              if(incubator.eggType === "epic") img_filename = "Egg_10k.webp";
+              if(incubator.egg && incubator.egg.type === "rare") img_filename = "Egg_5k.webp";
+              if(incubator.egg && incubator.egg.type === "epic") img_filename = "Egg_10k.webp";
               let title = "";
-              if(incubator.endDate) title += "End on " + new Date(incubator.endDate).toLocaleDateString() + " at " + new Date(incubator.endDate).toLocaleTimeString();
-              if(incubator.price || incubator.price == 0) title += "Price: " + incubator.price;
+              if(endDate) title += "End on " + new Date(endDate).toLocaleDateString() + " at " + new Date(endDate).toLocaleTimeString();
               return (
-                <div className={className} key={index} title={title} onClick={() => { if(incubator.eggType === null) this.setChooseEggDisplayed(true, incubator.price === null, incubator.id)}}>
-                  <div className="IncubatorBar" data-end={new Date(incubator.endDate).getTime()} data-duration={new Date(incubator.endDate).getTime() - new Date(incubator.startDate).getTime()} data-width={incubator.eggType !== null ? percent : -1} style={{width: percent + "%"}}></div>
+                <div className={className} key={index} title={title} onClick={() => { if(incubator.egg === null) this.setChooseEggDisplayed(true, incubator.id)}}>
+                  <div className="IncubatorBar" data-end={new Date(endDate).getTime()} data-duration={new Date(endDate).getTime() - new Date(incubator.start_date_time).getTime()} data-width={incubator.egg !== null ? percent : -1} style={{width: percent + "%"}}></div>
                   <img className="IncubatorEgg" src={"/"+img_filename}></img>
                   <img className="IncubatorImg" src={"incubator.png"}></img>
-                  <h4>{incubator.eggType !== null ? incubator.eggType.charAt(0).toUpperCase() + incubator.eggType.slice(1) : ""} Egg</h4>
-                  <h4>Unlock</h4>
-                  {incubator.price !== null ? <DisplayMoney money={incubator.price} onClick={() => this.buyIncubator()}></DisplayMoney> : <></>}
+                  <h4>{incubator.egg !== null ? incubator.egg.type.charAt(0).toUpperCase() + incubator.egg.type.slice(1) : ""} Egg</h4>
                 </div>
               );
             })}    
+            <div className="Incubator buy" key={this.state.incubators.length} title={"Price: " + (this.pricesIncubators[this.state.incubators.length])}>
+              <h4>Unlock</h4>
+              <DisplayMoney money={this.pricesIncubators[this.state.incubators.length]} onClick={() => this.buyIncubator()}></DisplayMoney>
+            </div>
           </div>
           <DisplayMoney money={this.state.money}></DisplayMoney>
-          <ChooseEgg isDisplayed={this.state.isChooseEggDisplayed} setIsDisplayed={(isDisplayed) => this.setChooseEggDisplayed(isDisplayed, true)} incubatorId={this.state.incubatorId}></ChooseEgg>
+          <ChooseEgg isDisplayed={this.state.isChooseEggDisplayed} setIsDisplayed={(isDisplayed) => this.setChooseEggDisplayed(isDisplayed)} incubatorId={this.state.incubatorId}></ChooseEgg>
         </div>
       </div>
     );

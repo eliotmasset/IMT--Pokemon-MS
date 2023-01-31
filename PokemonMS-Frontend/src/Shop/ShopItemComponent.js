@@ -1,7 +1,7 @@
 import React from 'react';
 import './ShopItem.css';
 
-const shopAddress = "http://localhost:8084";
+const shopAddress = "http://localhost:8084/shop";
 
 export default class ShopItem extends React.Component {
 
@@ -16,21 +16,12 @@ export default class ShopItem extends React.Component {
         && !event.target.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.classList.contains("selected")) return;
         let username = sessionStorage.getItem("username");
         let jwt_token = sessionStorage.getItem("jwt_token");
-        if(this.props.id <= 3) {
-            let response = await fetch(shopAddress + "/buyEggInShop", { method: "POST", body: JSON.stringify({username: username, jwt_token: jwt_token, egg_type: this.props.id})});
-            let data = await response.text();
-            if(data !== undefined && data !== null && data !== "") {
-                if(data !== "Egg bought") alert(data);
-                else alert("You bought an egg !");
-            } else alert("An error occured");
-        } else {
-            let response = await fetch(shopAddress + "/buyPokemonInShop", { method: "POST", body: JSON.stringify({username: username, jwt_token: jwt_token, pokemon_store: this.props.id - 3})});
-            let data = await response.text();
-            if(data !== undefined && data !== null && data !== "") {
-                if(data !== "Egg bought") alert(data);
-                else alert("You bought an egg !");
-            } else alert("An error occured");
-        }
+        let response = await fetch(shopAddress + "/buyEgg", { method: "POST", body: JSON.stringify({username: username, jwt_token: jwt_token, shopId: this.props.id})});
+        let data = await response.json();
+        if(data !== undefined && data !== null && data.status !== "") {
+            if(data.status !== "success") alert(data.message);
+            else alert("You bought an egg !");
+        } else alert("An error occured");
         this.props.updateMoney();
         return true;
     }

@@ -225,7 +225,7 @@ class App extends React.Component {
             <input type="password" placeholder="Password (re-type)" name="password-retyped" />
             <button type="submit" onClick={async (e) => this.subscrib(e)}>Subscribe</button>
             <div className="underline-form-connection"></div>
-            <input type="checkbox" id="gender" name="gender" checked={true} style={{display:"none"}} />
+            <input type="checkbox" id="gender" name="gender" checked={true} style={{display:"none"}} readOnly />
             <p>Want to connect ?</p>
             <a onClick={() => this.setState({inscriptionPage: false})}>Connexion</a>
           </form>

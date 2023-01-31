@@ -158,12 +158,15 @@ public class ShopController {
             jsonP1.put("name", shop.getPokemonType1().getName());
             jsonP1.put("description", shop.getPokemonType1().getDescription());
             jsonP1.put("price", shop.getPrice1());
+            jsonP1.put("engName", shop.getPokemonType1().getEnglish_name());
             jsonP2.put("name", shop.getPokemonType2().getName());
             jsonP2.put("description", shop.getPokemonType2().getDescription());
             jsonP2.put("price", shop.getPrice2());
+            jsonP2.put("engName", shop.getPokemonType2().getEnglish_name());
             jsonP3.put("name", shop.getPokemonType3().getName());
             jsonP3.put("description", shop.getPokemonType3().getDescription());
             jsonP3.put("price", shop.getPrice3());
+            jsonP3.put("engName", shop.getPokemonType3().getEnglish_name());
             json.put("pokemon1", jsonP1);
             json.put("pokemon2", jsonP2);
             json.put("pokemon3", jsonP3);

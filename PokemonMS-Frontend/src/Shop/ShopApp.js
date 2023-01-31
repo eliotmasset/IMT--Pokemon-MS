@@ -4,7 +4,8 @@ import DisplayMoney from "../components/DisplayMoneyComponent";
 import ShopItem from "./ShopItemComponent";
 import BackButtonComponent from "../components/BackButtonComponent";
 
-const ShopAdress = "http://localhost:8084";
+const ShopAdress = "http://localhost:8084/shop";
+const userAdress = "http://localhost:8087/user";
 
 class ShopApp extends React.Component {
 
@@ -34,20 +35,21 @@ class ShopApp extends React.Component {
   }
 
   async updateMoney() {
-    let response = await fetch("http://localhost:8087" + "/GetMoney?jwt_token=" + sessionStorage.getItem("jwt_token"));
-      let money = await response.json();
-      if(money != this.state.money) {
-        this.setState({money: money});
+    let response = await fetch(userAdress + "/getMoney?jwt_token=" + sessionStorage.getItem("jwt_token") + "&username=" + sessionStorage.getItem("username"));
+      let data = await response.json();
+      if(data.response != this.state.money) {
+        this.setState({money: data.response});
       }
   }
 
   async updateStore() {
-    let response = await fetch(ShopAdress + "/getStore?jwt_token=" + sessionStorage.getItem("jwt_token") + "&username=" + sessionStorage.getItem("username"));
-    let store = await response.json();
+    let response = await fetch(ShopAdress + "/getShop?jwt_token=" + sessionStorage.getItem("jwt_token") + "&username=" + sessionStorage.getItem("username"));
+    let data = await response.json();
+    let store = data.response;
     let new_state = [...this.state.item_list];
-    new_state[3] = store[0];
-    new_state[4] = store[1];
-    new_state[5] = store[2];
+    new_state[3] = store.pokemon1;
+    new_state[4] = store.pokemon2;
+    new_state[5] = store.pokemon3;
     if(JSON.stringify(new_state) !== JSON.stringify(this.state.item_list)) this.setState({item_list: new_state});
   }
 
@@ -59,8 +61,8 @@ class ShopApp extends React.Component {
         username: sessionStorage.getItem("username")
       })
     });
-    response = await response.text();
-    alert(response);
+    response = await response.json();
+    alert(response.message);
     this.updateStore();
   }
 
