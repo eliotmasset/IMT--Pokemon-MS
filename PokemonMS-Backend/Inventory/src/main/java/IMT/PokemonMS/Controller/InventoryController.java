@@ -30,6 +30,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.util.EntityUtils;
+import org.json.simple.parser.JSONParser;
 
 
 
@@ -78,7 +79,10 @@ public class InventoryController {
             HttpResponse response = httpclient.execute(httppost);
             if (response.getStatusLine().getStatusCode() != 200) return false;
             String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
-            if(!responseString.equals("Success")) return false;
+            JSONParser parser = new JSONParser();
+            JSONObject responseJson = new JSONObject();
+            responseJson = (JSONObject) parser.parse(responseString);
+            if(!responseJson.get("status").equals("success")) return false;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -89,69 +93,113 @@ public class InventoryController {
     @GetMapping("/eggs")
     public JSONObject getEggs(@RequestParam("jwt_token") String jwt_token, @RequestParam("username") String username) {
         JSONObject response = new JSONObject();
+        response.put("status", "error");
+        response.put("message", "An error occured");
+        response.put("response",  "");
+        try {
+            if (!isValidToken(jwt_token, username)) {
+                response.put("message", "Invalid token");
+                return response;
+            }
 
-        if (!isValidToken(jwt_token, username)) return null;
+            List<Egg> eggs = eggRepository.findByUsername(username);
 
-        List<Egg> eggs = eggRepository.findByUsername(username);
-
-        response.put("eggs", eggs);
-
+            response.put("response", eggs);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return response;
+        }
+        response.put("status", "success");
+        response.put("message", "Success");
         return response;
     }
 
     @PostMapping("/addEgg")
-    public Boolean addEgg(@RequestBody String body) {
-        String username = "";
-        String identifier = "";
-        Boolean isPokemon = false;
-        int type = 0;
-		try {
-			JSONObject json = (JSONObject) new org.json.simple.parser.JSONParser().parse(body);
-			username = (String) json.get("username");
-            identifier = (String) json.get("identifier");
-            isPokemon = (Boolean) json.get("isPokemon");
-            type = Math.toIntExact((Long) json.get("type"));
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-        if (!this.identifier.equals(identifier)) return false;
+    public JSONObject addEgg(@RequestBody String body) {
+        JSONObject response = new JSONObject();
+        response.put("status", "error");
+        response.put("message", "An error occured");
+        response.put("response",  "");
+        try {
+            String username = "";
+            String identifier = "";
+            Boolean isPokemon = false;
+            int type = 0;
+            try {
+                JSONObject json = (JSONObject) new org.json.simple.parser.JSONParser().parse(body);
+                username = (String) json.get("username");
+                identifier = (String) json.get("identifier");
+                isPokemon = (Boolean) json.get("isPokemon");
+                type = Math.toIntExact((Long) json.get("type"));
+            } catch (Exception e) {
+                e.printStackTrace();
+                response.put("message", "Invalid body");
+                return response;
+            }
+            if (!this.identifier.equals(identifier)) {
+                response.put("message", "Invalid identifier");
+                return response;
+            }
 
-        Egg egg = new Egg();
-        egg.setUsername(username);
-        if(!isPokemon) egg.setType(type == 0 ? "common" : type == 1 ? "rare" : "epic");
-        else egg.setType("common");
-        if(isPokemon) egg.setPokemon(type);
-        
-        eggRepository.save(egg);
-
-        return true;
+            Egg egg = new Egg();
+            egg.setUsername(username);
+            if(!isPokemon) egg.setType(type == 0 ? "common" : type == 1 ? "rare" : "epic");
+            else egg.setType("common");
+            if(isPokemon) egg.setPokemon(type);
+            
+            eggRepository.save(egg);
+            response.put("status", "success");
+            response.put("message", "Success");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return response;
     }
 
     
 	@PostMapping("/setEggInIncubator")
-	public String setEggInIncubator(@RequestBody String body) {
-		String username = "";
-        String jwt_token = "";
-		int id_incubator = 0;
-        int id_egg = 0;
-		try {
-			JSONObject json = (JSONObject) new org.json.simple.parser.JSONParser().parse(body);
-			username = (String) json.get("username");
-            jwt_token = (String) json.get("jwt_token");
-			id_incubator = ((Long) json.get("id_incubator")).intValue();
-            id_egg = ((Long) json.get("id_egg")).intValue();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "An error occured in the request";
-		}
-        if (!isValidToken(jwt_token, username)) return "Invalid token";
-        Egg egg = eggRepository.findById(id_egg).orElse(null);
-        if(egg == null) return "Egg not found";
-        String eggType = egg.getType();
-        int pokemonId = egg.getPokemon();
-        if(!callSetEggInIncubator(username, id_incubator, eggType, pokemonId)) return "An error occured in the incubation service";
-        this.eggRepository.delete(egg);
-        return "Egg set in incubator";
+	public JSONObject setEggInIncubator(@RequestBody String body) {
+        JSONObject response = new JSONObject();
+        response.put("status", "error");
+        response.put("message", "An error occured");
+        response.put("response",  "");
+        try {
+            String username = "";
+            String jwt_token = "";
+            int id_incubator = 0;
+            int id_egg = 0;
+            try {
+                JSONObject json = (JSONObject) new org.json.simple.parser.JSONParser().parse(body);
+                username = (String) json.get("username");
+                jwt_token = (String) json.get("jwt_token");
+                id_incubator = ((Long) json.get("id_incubator")).intValue();
+                id_egg = ((Long) json.get("id_egg")).intValue();
+            } catch (Exception e) {
+                e.printStackTrace();
+                response.put("message", "Invalid body");
+                return response;
+            }
+            if (!isValidToken(jwt_token, username)) {
+                response.put("message", "Invalid token");
+                return response;
+            }
+            Egg egg = eggRepository.findById(id_egg).orElse(null);
+            if(egg == null) {
+                response.put("message", "Egg not found");
+                return response;
+            }
+            String eggType = egg.getType();
+            int pokemonId = egg.getPokemon();
+            if(!callSetEggInIncubator(username, id_incubator, eggType, pokemonId)) {
+                return response;
+            }
+            this.eggRepository.delete(egg);
+            response.put("status", "success");
+            response.put("message", "Success");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return response;
+
     }
 }

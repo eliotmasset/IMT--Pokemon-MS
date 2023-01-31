@@ -20,7 +20,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.apache.commons.codec.binary.Hex;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +30,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
+import org.json.simple.parser.JSONParser;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.util.EntityUtils;
 
@@ -109,7 +109,10 @@ public class ShopController {
             HttpResponse response = httpclient.execute(httppost);
             if (response.getStatusLine().getStatusCode() != 200) return false;
             String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
-            if(!responseString.equals("true")) return false;
+            JSONParser parser = new JSONParser();
+            JSONObject responseJson = new JSONObject();
+            responseJson = (JSONObject) parser.parse(responseString);
+            if(!responseJson.get("status").equals("success")) return false;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -133,97 +136,171 @@ public class ShopController {
 
     @GetMapping("/getShop")
     public JSONObject getShop(@RequestParam(value = "jwt_token") String jwt_token, @RequestParam(value = "username") String username) {
-        if (!isValidToken(jwt_token, username)) return null;
-        if(shopRepository.findByUsername(username) == null) {
-            Shop shop = new Shop();
-            shop.setUsername(username);
-            this.reloadShop(shop);
+        JSONObject response = new JSONObject();
+        response.put("status", "error");
+        response.put("message", "An error occured");
+        response.put("response",  "");
+        try {
+            if (!isValidToken(jwt_token, username)) {
+                response.put("message", "Invalid token");
+                return response;
+            }
+            if(shopRepository.findByUsername(username) == null) {
+                Shop shop = new Shop();
+                shop.setUsername(username);
+                this.reloadShop(shop);
+            }
+            Shop shop = shopRepository.findByUsername(username);
+            JSONObject json = new JSONObject();
+            JSONObject jsonP1 = new JSONObject();
+            JSONObject jsonP2 = new JSONObject();
+            JSONObject jsonP3 = new JSONObject();
+            jsonP1.put("name", shop.getPokemonType1().getName());
+            jsonP1.put("description", shop.getPokemonType1().getDescription());
+            jsonP1.put("price", shop.getPrice1());
+            jsonP2.put("name", shop.getPokemonType2().getName());
+            jsonP2.put("description", shop.getPokemonType2().getDescription());
+            jsonP2.put("price", shop.getPrice2());
+            jsonP3.put("name", shop.getPokemonType3().getName());
+            jsonP3.put("description", shop.getPokemonType3().getDescription());
+            jsonP3.put("price", shop.getPrice3());
+            json.put("pokemon1", jsonP1);
+            json.put("pokemon2", jsonP2);
+            json.put("pokemon3", jsonP3);
+            json.put("id", shop.getId());
+            response.put("response", json);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return response;
         }
-        Shop shop = shopRepository.findByUsername(username);
-        JSONObject json = new JSONObject();
-        JSONObject jsonP1 = new JSONObject();
-        JSONObject jsonP2 = new JSONObject();
-        JSONObject jsonP3 = new JSONObject();
-        jsonP1.put("name", shop.getPokemonType1().getName());
-        jsonP1.put("description", shop.getPokemonType1().getDescription());
-        jsonP1.put("price", shop.getPrice1());
-        jsonP2.put("name", shop.getPokemonType2().getName());
-        jsonP2.put("description", shop.getPokemonType2().getDescription());
-        jsonP2.put("price", shop.getPrice2());
-        jsonP3.put("name", shop.getPokemonType3().getName());
-        jsonP3.put("description", shop.getPokemonType3().getDescription());
-        jsonP3.put("price", shop.getPrice3());
-        json.put("pokemon1", jsonP1);
-        json.put("pokemon2", jsonP2);
-        json.put("pokemon3", jsonP3);
-        json.put("id", shop.getId());
-        return json;
+        response.put("status", "success");
+        response.put("message", "Shop getted");
+        return response;
     }
 
     @PostMapping("/buyEgg")
-	public String buyEgg(@RequestBody String body) {
-        String username = "";
-        String jwt_token = "";
-        int shopId = 0;
-		try {
-			JSONObject json = (JSONObject) new org.json.simple.parser.JSONParser().parse(body);
-			username = (String) json.get("username");
-            jwt_token = (String) json.get("jwt_token");
-			shopId = Math.toIntExact((Long) json.get("shopId"));
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "An error occured";
-		}
-        if (!isValidToken(jwt_token, username)) return "Invalid token";
-        Shop shop = shopRepository.findByUsername(username);
-        if (shop == null) return "Shop not found";
+	public JSONObject buyEgg(@RequestBody String body) {
+        JSONObject response = new JSONObject();
+        response.put("status", "error");
+        response.put("message", "An error occured");
+        response.put("response",  "");
+        try {
+            String username = "";
+            String jwt_token = "";
+            int shopId = 0;
+            try {
+                JSONObject json = (JSONObject) new org.json.simple.parser.JSONParser().parse(body);
+                username = (String) json.get("username");
+                jwt_token = (String) json.get("jwt_token");
+                shopId = Math.toIntExact((Long) json.get("shopId"));
+            } catch (Exception e) {
+                e.printStackTrace();
+                response.put("message", "Invalid body");
+                return response;
+            }
+            if (!isValidToken(jwt_token, username)) {
+                response.put("message", "Invalid token");
+                return response;
+            }
+            Shop shop = shopRepository.findByUsername(username);
+            if (shop == null) {
+                response.put("message", "Shop not found");
+                return response;
+            }
 
-        if (shopId == 1) {
-            if(!removeMoney(200, username)) return "An error occured";
-            if(addEggToInventory(username, 0, false)) return "Success";
-        } else if (shopId == 2) {
-            if(!removeMoney(350, username)) return "An error occured";
-            if(addEggToInventory(username, 1, false)) return "Success";
-        } else if (shopId == 3) {
-            if(!removeMoney(500, username)) return "An error occured";
-            if(addEggToInventory(username, 2, false)) return "Success";
-        } else if (shopId == 4) {
-            if (shop.getPokemonType1() == null) return "Pokemon not found";
-            if(!removeMoney(shop.getPrice1(), username)) return "An error occured";
-            if(addEggToInventory(username, shop.getPokemonType1().getId(), true)) return "Success";
-        } else if (shopId == 5) {
-            if (shop.getPokemonType2() == null) return "Pokemon not found";
-            if(!removeMoney(shop.getPrice2(), username)) return "An error occured";
-            if(addEggToInventory(username, shop.getPokemonType2().getId(), true)) return "Success";
-        } else if (shopId == 6) {
-            if (shop.getPokemonType3() == null) return "Pokemon not found";
-            if(!removeMoney(shop.getPrice3(), username)) return "An error occured";
-            if(addEggToInventory(username, shop.getPokemonType3().getId(), true)) return "Success";
-        } else {
-            return "Invalid shop id";
+            if (shopId == 1) {
+                if(!removeMoney(200, username)) return response;
+                if(addEggToInventory(username, 0, false)) {
+                    response.put("status", "success");
+                    response.put("message", "Egg bought");
+                    return response;
+                }
+            } else if (shopId == 2) {
+                if(!removeMoney(350, username)) return response;
+                if(addEggToInventory(username, 1, false)) {
+                    response.put("status", "success");
+                    response.put("message", "Egg bought");
+                    return response;
+                }
+            } else if (shopId == 3) {
+                if(!removeMoney(500, username)) return response;
+                if(addEggToInventory(username, 2, false)) {
+                    response.put("status", "success");
+                    response.put("message", "Egg bought");
+                    return response;
+                }
+            } else if (shopId == 4) {
+                if (shop.getPokemonType1() == null) return response;
+                if(!removeMoney(shop.getPrice1(), username)) return response;
+                if(addEggToInventory(username, shop.getPokemonType1().getId(), true)) {
+                    response.put("status", "success");
+                    response.put("message", "Egg bought");
+                    return response;
+                }
+            } else if (shopId == 5) {
+                if (shop.getPokemonType2() == null) return response;
+                if(!removeMoney(shop.getPrice2(), username)) return response;
+                if(addEggToInventory(username, shop.getPokemonType2().getId(), true)) {
+                    response.put("status", "success");
+                    response.put("message", "Egg bought");
+                    return response;
+                }
+            } else if (shopId == 6) {
+                if (shop.getPokemonType3() == null) return response;
+                if(!removeMoney(shop.getPrice3(), username)) return response;
+                if(addEggToInventory(username, shop.getPokemonType3().getId(), true)) {
+                    response.put("status", "success");
+                    response.put("message", "Egg bought");
+                    return response;
+                }
+            } else {
+                return response;
+            }
+            response.put("status", "error");
+            response.put("message", "CRITICAL ERROR");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return  response;
         }
-        return "[CRITICAL ERROR]";
+        return response;
     }
 
     @PostMapping("/buyReload")
-    public String buyReload(@RequestBody String body) {
-        String username = "";
-        String jwt_token = "";
+    public JSONObject buyReload(@RequestBody String body) {
+        JSONObject response = new JSONObject();
+        response.put("status", "error");
+        response.put("message", "An error occured");
+        response.put("response",  "");
         try {
-            JSONObject json = (JSONObject) new org.json.simple.parser.JSONParser().parse(body);
-            username = (String) json.get("username");
-            jwt_token = (String) json.get("jwt_token");
+            String username = "";
+            String jwt_token = "";
+            try {
+                JSONObject json = (JSONObject) new org.json.simple.parser.JSONParser().parse(body);
+                username = (String) json.get("username");
+                jwt_token = (String) json.get("jwt_token");
+            } catch (Exception e) {
+                e.printStackTrace();
+                response.put("message", "Invalid body");
+                return response;
+            }
+            if (!isValidToken(jwt_token, username)) {
+                response.put("message", "Invalid token");
+                return response;
+            }
+            Shop shop = shopRepository.findByUsername(username);
+            if (shop == null) {
+                response.put("message", "Shop not found");
+                return response;
+            }
+
+            if(!removeMoney(500, username)) return response;
+            this.reloadShop(shop);
         } catch (Exception e) {
             e.printStackTrace();
-            return "An error occured";
+            return response;
         }
-        if (!isValidToken(jwt_token, username)) return "Invalid token";
-        Shop shop = shopRepository.findByUsername(username);
-        if (shop == null) return "Shop not found";
-
-        if(!removeMoney(500, username)) return "An error occured";
-        this.reloadShop(shop);
-
-        return "ok";
+        response.put("status", "success");
+        response.put("message", "Shop reloaded");
+        return response;
     }
 }

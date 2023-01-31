@@ -93,67 +93,115 @@ public class IncubationController {
     }
 
     @GetMapping("/getIncubatorList")
-	public List<Incubator> getIncubatorList(@RequestParam(value = "jwt_token") String jwt_token, @RequestParam(value = "username") String username) {
-        if (!isValidToken(jwt_token, username)) return null;
-        return incubatorRepository.findByUsername(username);
+	public JSONObject getIncubatorList(@RequestParam(value = "jwt_token") String jwt_token, @RequestParam(value = "username") String username) {
+        JSONObject response = new JSONObject();
+        response.put("status", "error");
+        response.put("message", "Invalid token");
+        response.put("response",  "");
+        if (isValidToken(jwt_token, username)) {
+            response.put("status", "success");
+            response.put("message", "Success");
+            response.put("response", incubatorRepository.findByUsername(username));
+        }
+        return response;
     }
 
     
 	@PostMapping("/setEggInIncubator")
-	public String setEggInIncubator(@RequestBody String body) {
+	public JSONObject setEggInIncubator(@RequestBody String body) {
+        JSONObject response = new JSONObject();
+        response.put("status", "error");
+        response.put("message", "An error occured");
+        response.put("response",  "");
 		String username = "";
-		int id_incubator = 0;
-        String eggType = "";
-        int pokemonId = 0;
-        String identifier = "";
-		try {
-			JSONObject json = (JSONObject) new org.json.simple.parser.JSONParser().parse(body);
-			username = (String) json.get("username");
-			id_incubator = ((Long) json.get("id_incubator")).intValue();
-            eggType = (String) json.get("eggType");
-            pokemonId = ((Long) json.get("pokemonId")).intValue();
-            identifier = (String) json.get("identifier");
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "An error occured";
-		}
-        if(!identifier.equals(this.identifier)) return "Invalid identifier";
-        Incubator incubator = null;
-        try {incubator = incubatorRepository.findById(id_incubator).get();}
-        catch (Exception e) { return "Incubator not found";}
-        if(incubator == null) return "Incubator not found";
-        if (incubator.getEgg() != null) return "Incubator already has an egg";
-        Egg egg = new Egg();
-        egg.setType(eggType);
-        egg.setPokemon(pokemonId);
-        egg.setTime_to_incubate(3600);
-        incubator.setStart_date_time(LocalDateTime.now());
-        eggRepository.save(egg);
-        incubator.setEgg(egg);
-        incubatorRepository.save(incubator);
-        return "Success";
+        try {
+            int id_incubator = 0;
+            String eggType = "";
+            int pokemonId = 0;
+            String identifier = "";
+            try {
+                JSONObject json = (JSONObject) new org.json.simple.parser.JSONParser().parse(body);
+                username = (String) json.get("username");
+                id_incubator = ((Long) json.get("id_incubator")).intValue();
+                eggType = (String) json.get("eggType");
+                pokemonId = ((Long) json.get("pokemonId")).intValue();
+                identifier = (String) json.get("identifier");
+            } catch (Exception e) {
+                e.printStackTrace();
+                return response;
+            }
+            if(!identifier.equals(this.identifier)) {
+                response.put("message", "Invalid identifier");
+                return response;
+            }
+            Incubator incubator = null;
+            try {incubator = incubatorRepository.findById(id_incubator).get();}
+            catch (Exception e) {
+                response.put("message", "Incubator not found");
+                return response;
+            }
+            if(incubator == null) {
+                response.put("message", "Incubator not found");
+                return response;
+            }
+            if (incubator.getEgg() != null) {
+                response.put("message", "Incubator already used");
+                return response;
+            }
+            Egg egg = new Egg();
+            egg.setType(eggType);
+            egg.setPokemon(pokemonId);
+            egg.setTime_to_incubate(3600);
+            incubator.setStart_date_time(LocalDateTime.now());
+            eggRepository.save(egg);
+            incubator.setEgg(egg);
+            incubatorRepository.save(incubator);
+            response.put("response", "success");
+        } catch (Exception e) {
+            return response;
+        }
+        response.put("status", "success");
+        response.put("message", "Egg set in incubator");
+        return response;
     }
 
     @PostMapping("/buyIncubator")
-    public String buyIncubator(@RequestBody String body) {
-        String jwt_token = "";
-        String username = "";
+    public JSONObject buyIncubator(@RequestBody String body) {
+        JSONObject response = new JSONObject();
+        response.put("status", "error");
+        response.put("message", "An error occured");
+        response.put("response",  "");
         try {
-            JSONObject json = (JSONObject) new org.json.simple.parser.JSONParser().parse(body);
-            jwt_token = (String) json.get("jwt_token");
-            username = (String) json.get("username");
+            String jwt_token = "";
+            String username = "";
+            try {
+                JSONObject json = (JSONObject) new org.json.simple.parser.JSONParser().parse(body);
+                jwt_token = (String) json.get("jwt_token");
+                username = (String) json.get("username");
+            } catch (Exception e) {
+                e.printStackTrace();
+                return response;
+            }
+            if (!isValidToken(jwt_token, username)) {
+                response.put("message", "Invalid token");
+                return response;
+            }
+            int incubatorCount = incubatorRepository.countByUsername(username);
+            if (incubatorCount >= incubatorPrice.length) incubatorCount = incubatorPrice.length - 1;
+            if (!this.removeMoney(username, this.incubatorPrice[incubatorCount])) {
+                response.put("message", "Not enough money");
+                return response;
+            }
+            Incubator incubator = new Incubator();
+            incubator.setUsername(username);
+            incubatorRepository.save(incubator);
+            response.put("response", "success");
         } catch (Exception e) {
-            e.printStackTrace();
-            return "An error occured";
+            return response;
         }
-        if (!isValidToken(jwt_token, username)) return "Invalid token";
-        int incubatorCount = incubatorRepository.countByUsername(username);
-        if (incubatorCount >= incubatorPrice.length) incubatorCount = incubatorPrice.length - 1;
-        if (!this.removeMoney(username, this.incubatorPrice[incubatorCount])) return "Not enough money";
-        Incubator incubator = new Incubator();
-        incubator.setUsername(username);
-        incubatorRepository.save(incubator);
-        return "Incubator bought";
+        response.put("status", "success");
+        response.put("message", "Incubator bought");
+        return response;
     }
 
 
