@@ -3,11 +3,12 @@ package IMT.PokemonMS.Model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "\"PokemonType\"")
-public class PokemonType {
+public class Pokemon {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;    
+    private int id;
+
+    private int id_pokedex;
 
     private String name;
 
@@ -27,7 +28,11 @@ public class PokemonType {
 
     private int hp;
 
+    private int level;
+
     private Boolean is_legendary;
+
+    private Boolean gender;
 
     public int getId() {
         return id;
@@ -35,6 +40,14 @@ public class PokemonType {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getId_pokedex() {
+        return id_pokedex;
+    }
+
+    public void setId_pokedex(int id_pokedex) {
+        this.id_pokedex = id_pokedex;
     }
 
     public String getName() {
@@ -109,6 +122,14 @@ public class PokemonType {
         this.hp = hp;
     }
 
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
     public Boolean getIs_legendary() {
         return is_legendary;
     }
@@ -116,5 +137,12 @@ public class PokemonType {
     public void setIs_legendary(Boolean is_legendary) {
         this.is_legendary = is_legendary;
     }
+    
+    public Boolean getGender() {
+        return gender;
+    }
 
+    public void setGender(Boolean gender) {
+        this.gender = gender;
+    }
 }
