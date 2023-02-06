@@ -12,7 +12,14 @@ class TeamApp extends React.Component {
       this.state = {
         isDisplayed: null,
         pokemon_select: 2,
-        pokemon_list : []
+        pokemon_list : [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ]
       }
     }
   
@@ -23,7 +30,7 @@ class TeamApp extends React.Component {
     selectPokemon(key) {
         this.setState({pokemon_select:key});
     }
-    
+
     async updateTeam() {
         let response = await fetch(TeamAdress + "/getTeam?jwt_token=" + sessionStorage.getItem("jwt_token") + "&username=" + sessionStorage.getItem("username"));
         let data = await response.json();
@@ -51,7 +58,7 @@ class TeamApp extends React.Component {
                 <li className={className} key={key}>
                     <input type="radio" id={key} name="pkm" value={key} checked={checked} onChange={() => {return;}} readOnly/>
                     {
-                        pokemon === undefined || pokemon === null ? <div></div> : <PokemonItem name={pokemon.name} gender={pokemon.gender} level={pokemon.level} onClick={()=> this.selectPokemon(key)}/>
+                        pokemon === undefined || pokemon === null ? <PokemonItem name="Empty" onClick={()=> this.selectPokemon(key)}/> : <PokemonItem name={pokemon.name} gender={pokemon.gender} level={pokemon.level} onClick={()=> this.selectPokemon(key)}/>
                     }
                 </li>
             );
@@ -75,7 +82,7 @@ class TeamApp extends React.Component {
                     </div>
                     <div className="pokemonSpriteDiv">
                         {
-                            this.state.pokemon_list[this.state.pokemon_select] === undefined || this.state.pokemon_list[this.state.pokemon_select] === null ? <img className="pokemonSprite" src="/sprite/unknown_sprite.gif"/> : <img className="pokemonSprite" src={"/sprite/"+this.state.pokemon_list[this.state.pokemon_select].english_name+"_sprite.gif"}/>
+                            this.state.pokemon_list[this.state.pokemon_select] === undefined || this.state.pokemon_list[this.state.pokemon_select] === null ? <img className="pokemonSprite" src="/sprite/unknown_sprite.gif"/> : <img className="pokemonSprite" src={"/sprite/"+this.state.pokemon_list[this.state.pokemon_select].english_name.toLowerCase()+"_sprite.gif"}/>
                         }
                     </div>
                     <BackButtonComponent onClick={() => this.setIsDisplayed(false)}></BackButtonComponent>

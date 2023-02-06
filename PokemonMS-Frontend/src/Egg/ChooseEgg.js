@@ -21,7 +21,7 @@ class ChooseEgg extends React.Component {
     }
 
     async setEggInIncubator(eggId, incubatorId) {
-        let response = await fetch(InventoryAddress + "/setEggInIncubator?jwt_token=" + sessionStorage.getItem("jwt_token") + "&username=" + sessionStorage.getItem("username") + "&eggId=" + eggId + "&incubatorId=" + incubatorId,
+        let response = await fetch(InventoryAddress + "/setEggInIncubator",
         { method: "POST", body: JSON.stringify({username: sessionStorage.getItem("username"), jwt_token: sessionStorage.getItem("jwt_token"), id_egg: eggId, id_incubator: incubatorId})});
         let data = await response.json();
         if(data !== undefined && data !== null && data.status !== "") {

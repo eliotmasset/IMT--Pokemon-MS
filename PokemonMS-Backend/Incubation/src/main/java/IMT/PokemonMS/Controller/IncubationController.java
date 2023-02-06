@@ -133,7 +133,14 @@ public class IncubationController {
 
     private PokemonType getPokemon(Egg egg) {
         if(egg.getPokemon() != 0 && egg.getPokemon() != 1) return pokemonTypeRepository.findById(egg.getPokemon());
-        return pokemonTypeRepository.findById((int)(Math.random() * 106) + 1);
+        switch (egg.getType()) {
+            case "common":
+                return pokemonTypeRepository.findById((int)(Math.random() * 40) + 1);
+            case "rare":
+                return pokemonTypeRepository.findById((int)(Math.random() * 40) + 40 + 1);
+            default:
+                return pokemonTypeRepository.findById((int)(Math.random() * 26) + 80 + 1);
+        }
     }
 
     @GetMapping("/getIncubatorList")

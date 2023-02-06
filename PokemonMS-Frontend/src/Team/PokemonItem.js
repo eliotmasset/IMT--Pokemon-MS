@@ -18,10 +18,10 @@ export default class PokemonItem extends React.Component {
         return (
             <div className="pokemonItem" onClick={() => this.props.onClick()}>
                 <ul className="pokemonInfos">
-                    <li><img className="pokemonBoxSprite" src={boxGifSrc}/></li>
+                    {this.props.level ? <li><img className="pokemonBoxSprite" src={boxGifSrc}/></li> : <li></li>}
                     <li className="pokemonName">{this.props.name}</li>
                     {genderLi}
-                    <li>Lv. {this.props.level}</li>
+                    {this.props.level ? <li>Lv. {this.props.level}</li> : <li></li>}
                 </ul>
             </div>
         );

@@ -33,8 +33,8 @@ class EggApp extends React.Component {
     this.setState({isChooseEggDisplayed: isDisplayed, incubatorId: incubatorId, last_update: new Date()});
   }
 
-  setChooseTeamDisplayed(isDisplayed) {
-    this.setState({isChooseTeamDisplayed: isDisplayed, last_update: new Date()});
+  setChooseTeamDisplayed(isDisplayed, incubatorId) {
+    this.setState({isChooseTeamDisplayed: isDisplayed, incubatorId: incubatorId, last_update: new Date()});
   }
 
   getPercentFromIncubator(incubator, endDate) {
@@ -114,7 +114,7 @@ class EggApp extends React.Component {
               let title = "";
               if(endDate) title += "End on " + new Date(endDate).toLocaleDateString() + " at " + new Date(endDate).toLocaleTimeString();
               return (
-                <div className={className} key={index} title={title} data-width={incubator.egg !== null ? percent : -1} onClick={() => { if(incubator.egg === null) this.setChooseEggDisplayed(true, incubator.id); else if(percent === 100) this.setChooseTeamDisplayed(true);}}>
+                <div className={className} key={index} title={title} data-width={incubator.egg !== null ? percent : -1} onClick={() => { if(incubator.egg === null) this.setChooseEggDisplayed(true, incubator.id); else if(percent === 100) this.setChooseTeamDisplayed(true, incubator.id);}}>
                   <div className="IncubatorBar" data-end={new Date(endDate).getTime()} data-duration={new Date(endDate).getTime() - new Date(incubator.start_date_time).getTime()} data-width={incubator.egg !== null ? percent : -1} style={{width: percent + "%"}}></div>
                   <img className="IncubatorEgg" src={"/"+img_filename}></img>
                   <img className="IncubatorImg" src={"incubator.png"}></img>
@@ -129,7 +129,7 @@ class EggApp extends React.Component {
           </div>
           <DisplayMoney money={this.state.money}></DisplayMoney>
           <ChooseEgg isDisplayed={this.state.isChooseEggDisplayed} setIsDisplayed={(isDisplayed) => this.setChooseEggDisplayed(isDisplayed)} incubatorId={this.state.incubatorId}></ChooseEgg>
-          <ChooseTeam isDisplayed={this.state.isChooseTeamDisplayed} setIsDisplayed={(isDisplayed) => this.setChooseTeamDisplayed(isDisplayed)}></ChooseTeam>
+          <ChooseTeam isDisplayed={this.state.isChooseTeamDisplayed} setIsDisplayed={(isDisplayed) => this.setChooseTeamDisplayed(isDisplayed)} incubatorId={this.state.incubatorId}></ChooseTeam>
         </div>
       </div>
     );
