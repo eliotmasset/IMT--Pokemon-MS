@@ -12,8 +12,7 @@ class TeamApp extends React.Component {
       this.state = {
         isDisplayed: null,
         pokemon_select: 2,
-        pokemon_list : [
-        ]
+        pokemon_list : []
       }
     }
   
@@ -24,6 +23,7 @@ class TeamApp extends React.Component {
     selectPokemon(key) {
         this.setState({pokemon_select:key});
     }
+    
     async updateTeam() {
         let response = await fetch(TeamAdress + "/getTeam?jwt_token=" + sessionStorage.getItem("jwt_token") + "&username=" + sessionStorage.getItem("username"));
         let data = await response.json();
@@ -35,8 +35,6 @@ class TeamApp extends React.Component {
             data.response.pokemon5,
             data.response.pokemon6
         ];
-        console.log(team);
-        console.log(data);
         if(JSON.stringify(team) !== JSON.stringify(this.state.pokemon_list)) this.setState({pokemon_list: team});
     }
   

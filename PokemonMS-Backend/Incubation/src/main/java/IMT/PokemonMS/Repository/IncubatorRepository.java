@@ -8,5 +8,6 @@ public interface IncubatorRepository extends CrudRepository<Incubator, Integer> 
 
     List<Incubator> findByUsername(String username);
     int countByUsername(String username);
+    Incubator findById(int id);
 
 }

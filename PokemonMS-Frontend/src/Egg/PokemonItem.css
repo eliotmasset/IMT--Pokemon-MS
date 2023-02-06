@@ -1,0 +1,50 @@
+.gender {
+    margin-top: 10px;
+    justify-content: center;
+}
+.gender.female {
+    width: 35px;
+    height: 40px;
+}
+.gender.male {
+    width: 50px;
+    height: 40px;
+}
+.pokemonItem {
+    margin-bottom: 15px;
+}
+.pokemonName {
+    text-align: left;
+}
+.pokemonBoxSprite {
+    width: 64px;
+    height: 64px;
+    margin-top: -10px;
+}
+.choosePokemonInfos > li {
+    font-size: 36px;
+    margin-left: -80px;
+    padding-left: 10px;
+}
+li.selected .choosePokemonInfos {
+    color: white;
+    background-color: rgb(170, 46, 46);
+}
+.choosePokemonInfos:hover {
+    color: white;
+    background-color: rgb(170, 46, 46);
+    cursor: pointer;
+}
+.choosePokemonInfos {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    background-color: #D9D9D9;
+    border-radius: 90px;
+    width: 600px;
+    max-width: 600px;
+    height: 60px;
+    min-height: 60px;
+    max-height: 60px;
+    grid-column-gap: 41px;
+}

@@ -110,7 +110,7 @@ public class TeamController {
             }
 
             Pokemon pokemon_new = new Pokemon();
-            pokemon_new.setId_pokedex(Math.toIntExact((long) pokemon.get("id_pokedex")));
+            pokemon_new.setId_pokedex(Math.toIntExact((long) pokemon.get("id")));
             pokemon_new.setName((String) pokemon.get("name"));
             pokemon_new.setEnglish_name((String) pokemon.get("english_name"));
             pokemon_new.setHp(Math.toIntExact((long) pokemon.get("hp")));
@@ -147,6 +147,7 @@ public class TeamController {
             response.put("response", team);
             return response;
         } catch (Exception e) {
+            e.printStackTrace();
             return response;
         }
     }
@@ -161,9 +162,9 @@ public class TeamController {
             JSONParser parser = new JSONParser();
             JSONObject body = (JSONObject) parser.parse(bodyString);
             String username = (String) body.get("username");
-            String identifier = (String) body.get("jwt_token");
+            String identifier = (String) body.get("identifier");
             JSONObject pokemon = (JSONObject) body.get("pokemon");
-            int position = (int) body.get("position");
+            int position = Math.toIntExact((long) body.get("position"));
             if (!identifier.equals(this.identifier)){
                 response.put("message", "Invalid identifier");
                 return response;
@@ -175,7 +176,7 @@ public class TeamController {
             }
 
             Pokemon pokemon_new = new Pokemon();
-            pokemon_new.setId_pokedex(Math.toIntExact((long) pokemon.get("id_pokedex")));
+            pokemon_new.setId_pokedex(Math.toIntExact((long) pokemon.get("id")));
             pokemon_new.setName((String) pokemon.get("name"));
             pokemon_new.setEnglish_name((String) pokemon.get("english_name"));
             pokemon_new.setHp(Math.toIntExact((long) pokemon.get("hp")));
@@ -192,27 +193,27 @@ public class TeamController {
             if(position == 1) {
                 Pokemon pokemon_old = team.getPokemon1();
                 team.setPokemon1(pokemon_new);
-                pokemonRepository.delete(pokemon_old);
+                if(pokemon_old != null) pokemonRepository.delete(pokemon_old);
             } else if(position == 2) {
                 Pokemon pokemon_old = team.getPokemon2();
                 team.setPokemon2(pokemon_new);
-                pokemonRepository.delete(pokemon_old);
+                if(pokemon_old != null) pokemonRepository.delete(pokemon_old);
             } else if(position == 3) {
                 Pokemon pokemon_old = team.getPokemon3();
                 team.setPokemon3(pokemon_new);
-                pokemonRepository.delete(pokemon_old);
+                if(pokemon_old != null) pokemonRepository.delete(pokemon_old);
             } else if(position == 4) {
                 Pokemon pokemon_old = team.getPokemon4();
                 team.setPokemon4(pokemon_new);
-                pokemonRepository.delete(pokemon_old);
+                if(pokemon_old != null) pokemonRepository.delete(pokemon_old);
             } else if(position == 5) {
                 Pokemon pokemon_old = team.getPokemon5();
                 team.setPokemon5(pokemon_new);
-                pokemonRepository.delete(pokemon_old);
+                if(pokemon_old != null) pokemonRepository.delete(pokemon_old);
             } else if(position == 6) {
                 Pokemon pokemon_old = team.getPokemon6();
                 team.setPokemon6(pokemon_new);
-                pokemonRepository.delete(pokemon_old);
+                if(pokemon_old != null) pokemonRepository.delete(pokemon_old);
             } else{
                 pokemonRepository.delete(pokemon_new);
                 response.put("message", "Invalid position");
@@ -225,6 +226,7 @@ public class TeamController {
             response.put("response", team);
             return response;
         } catch (Exception e) {
+            e.printStackTrace();
             return response;
         }
     }
