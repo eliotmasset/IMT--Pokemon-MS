@@ -70,8 +70,8 @@ public class InventoryController {
             json.put("identifier", this.incubation_identifier);
             json.put("username", username);
             json.put("id_incubator", id_incubator);
-            json.put("eggType", eggType);
-            json.put("pokemonId", pokemonId);
+            json.put("egg_type", eggType);
+            json.put("id_pokemon", pokemonId);
             StringEntity entity = new StringEntity(json.toString());
             httppost.setEntity(entity);
             httppost.setHeader("Accept", "application/json");
@@ -129,7 +129,7 @@ public class InventoryController {
                 JSONObject json = (JSONObject) new org.json.simple.parser.JSONParser().parse(body);
                 username = (String) json.get("username");
                 identifier = (String) json.get("identifier");
-                isPokemon = (Boolean) json.get("isPokemon");
+                isPokemon = (Boolean) json.get("is_pokemon");
                 type = Math.toIntExact((Long) json.get("type"));
             } catch (Exception e) {
                 e.printStackTrace();

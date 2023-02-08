@@ -43,7 +43,7 @@ class ChooseTeam extends React.Component {
         if(positionAtTheMaxTop) position = key + 1;
 
         let response = await fetch(IncubationAdress + "/hatchingPokemon",
-        { method: "POST", body: JSON.stringify({username: sessionStorage.getItem("username"), jwt_token: sessionStorage.getItem("jwt_token"), incubator_id: this.props.incubatorId, position: position})});
+        { method: "POST", body: JSON.stringify({username: sessionStorage.getItem("username"), jwt_token: sessionStorage.getItem("jwt_token"), id_incubator: this.props.incubatorId, position: position})});
         let data = await response.json();
         if(data !== undefined && data !== null && data.status !== "") {
             if(data.status !== "success") alert(data.message);

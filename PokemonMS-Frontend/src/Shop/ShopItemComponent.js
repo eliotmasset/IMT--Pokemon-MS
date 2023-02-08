@@ -16,7 +16,7 @@ export default class ShopItem extends React.Component {
         && !event.target.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.classList.contains("selected")) return;
         let username = sessionStorage.getItem("username");
         let jwt_token = sessionStorage.getItem("jwt_token");
-        let response = await fetch(shopAddress + "/buyEgg", { method: "POST", body: JSON.stringify({username: username, jwt_token: jwt_token, shopId: this.props.id})});
+        let response = await fetch(shopAddress + "/buyEgg", { method: "POST", body: JSON.stringify({username: username, jwt_token: jwt_token, id_shop: this.props.id})});
         let data = await response.json();
         if(data !== undefined && data !== null && data.status !== "") {
             if(data.status !== "success") alert(data.message);

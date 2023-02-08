@@ -101,7 +101,7 @@ public class ShopController {
             json.put("identifier", this.inventory_identifier);
             json.put("username", username);
             json.put("type", type);
-            json.put("isPokemon", isPokemon);
+            json.put("is_pokemon", isPokemon);
             StringEntity entity = new StringEntity(json.toString());
             httppost.setEntity(entity);
             httppost.setHeader("Accept", "application/json");
@@ -195,7 +195,7 @@ public class ShopController {
                 JSONObject json = (JSONObject) new org.json.simple.parser.JSONParser().parse(body);
                 username = (String) json.get("username");
                 jwt_token = (String) json.get("jwt_token");
-                shopId = Math.toIntExact((Long) json.get("shopId"));
+                shopId = Math.toIntExact((Long) json.get("id_shop"));
             } catch (Exception e) {
                 e.printStackTrace();
                 response.put("message", "Invalid body");

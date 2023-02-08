@@ -174,8 +174,8 @@ public class IncubationController {
                 JSONObject json = (JSONObject) new org.json.simple.parser.JSONParser().parse(body);
                 username = (String) json.get("username");
                 id_incubator = ((Long) json.get("id_incubator")).intValue();
-                eggType = (String) json.get("eggType");
-                pokemonId = ((Long) json.get("pokemonId")).intValue();
+                eggType = (String) json.get("egg_type");
+                pokemonId = ((Long) json.get("id_pokemon")).intValue();
                 identifier = (String) json.get("identifier");
             } catch (Exception e) {
                 e.printStackTrace();
@@ -270,7 +270,7 @@ public class IncubationController {
             JSONObject body = (JSONObject) parser.parse(bodyString);
             String username = (String) body.get("username");
             String jwt_token = (String) body.get("jwt_token");
-            int incubator_id = ((Long) body.get("incubator_id")).intValue();
+            int incubator_id = ((Long) body.get("id_incubator")).intValue();
             int position = ((Long) body.get("position")).intValue();
             if(!isValidToken(jwt_token, username)) {
                 response.put("message", "Invalid token");
