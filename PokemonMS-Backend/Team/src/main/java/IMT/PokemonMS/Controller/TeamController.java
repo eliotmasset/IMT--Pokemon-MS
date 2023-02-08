@@ -33,6 +33,11 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.util.EntityUtils;
 import org.json.simple.parser.JSONParser;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.rabbit.annotation.RabbitHandler;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Value;
+
 
 
 
@@ -87,26 +92,37 @@ public class TeamController {
         response.put("response", team);
         return response;
     }
-
-    @PostMapping("/addPokemon")
-    public JSONObject addPokemon(@RequestBody String body) {
-        JSONObject response = new JSONObject();
-        response.put("status", "error");
-        response.put("message", "An error occured");
-        response.put("response",  "");
+    
+    @RabbitListener(queues = "${spring.rabbitmq.queue}")
+    public void receivedMessage(String message) {
         try {
-            JSONObject json = (JSONObject) new org.json.simple.parser.JSONParser().parse(body);
+            JSONParser parser = new JSONParser();  
+            JSONObject json = (JSONObject) parser.parse(message); 
+            if(((String)json.get("request")).equals("addPokemon")) {
+                this.addPokemon((JSONObject)json.get("body"));
+            } else if(((String)json.get("request")).equals("replacePokemon")) {
+                this.replacePokemon((JSONObject)json.get("body"));
+            } else {
+                System.out.println("Unknown request :" + json.get("request"));
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        
+    }
+
+    public void addPokemon(JSONObject message) {
+        try {
+            JSONObject json = message;
             String username = (String) json.get("username");
             String identifier = (String) json.get("identifier");
             JSONObject pokemon = (JSONObject) json.get("pokemon");
             if (!identifier.equals(this.identifier)){
-                response.put("message", "Invalid identifier");
-                return response;
+                return;
             }
             Team team = teamRepository.findByUsername(username);
             if(team == null){
-                response.put("message", "Team not found");
-                return response;
+                return;
             }
 
             Pokemon pokemon_new = new Pokemon();
@@ -123,6 +139,7 @@ public class TeamController {
             pokemon_new.setGender((Boolean) pokemon.get("gender"));
             pokemon_new.setIs_legendary((Boolean) pokemon.get("is_legendary"));
             pokemonRepository.save(pokemon_new);
+            System.out.println("Add Pokemon : " + pokemon_new.getName());
             
             if(team.getPokemon1() == null)
                 team.setPokemon1(pokemon_new);
@@ -138,41 +155,29 @@ public class TeamController {
                 team.setPokemon6(pokemon_new);
             else{
                 pokemonRepository.delete(pokemon_new);
-                response.put("message", "Team is full");
-                return response;
+                return;
             }
             teamRepository.save(team);
-            response.put("status", "success");
-            response.put("message", "Pokemon added to team");
-            response.put("response", team);
-            return response;
+            return;
         } catch (Exception e) {
             e.printStackTrace();
-            return response;
+            return;
         }
     }
 
-    @PostMapping("/replacePokemon")
-    public JSONObject replacePokemon(@RequestBody String bodyString) {
-        JSONObject response = new JSONObject();
-        response.put("status", "error");
-        response.put("message", "An error occured");
-        response.put("response",  "");
+    public void replacePokemon(JSONObject message) {
         try {
-            JSONParser parser = new JSONParser();
-            JSONObject body = (JSONObject) parser.parse(bodyString);
+            JSONObject body = message;
             String username = (String) body.get("username");
             String identifier = (String) body.get("identifier");
             JSONObject pokemon = (JSONObject) body.get("pokemon");
             int position = Math.toIntExact((long) body.get("position"));
-            if (!identifier.equals(this.identifier)){
-                response.put("message", "Invalid identifier");
-                return response;
+            if (!identifier.equals(this.identifier)) {
+                return;
             }
             Team team = teamRepository.findByUsername(username);
             if(team == null){
-                response.put("message", "Team not found");
-                return response;
+                return;
             }
 
             Pokemon pokemon_new = new Pokemon();
@@ -189,45 +194,49 @@ public class TeamController {
             pokemon_new.setGender((Boolean) pokemon.get("gender"));
             pokemon_new.setIs_legendary((Boolean) pokemon.get("is_legendary"));
             pokemonRepository.save(pokemon_new);
+            System.out.println("Pokemon saved : " + pokemon_new.getName());
+            System.out.println("Position : " + position);
 
             if(position == 1) {
                 Pokemon pokemon_old = team.getPokemon1();
                 team.setPokemon1(pokemon_new);
+                teamRepository.save(team);
                 if(pokemon_old != null) pokemonRepository.delete(pokemon_old);
             } else if(position == 2) {
                 Pokemon pokemon_old = team.getPokemon2();
                 team.setPokemon2(pokemon_new);
+                teamRepository.save(team);
                 if(pokemon_old != null) pokemonRepository.delete(pokemon_old);
             } else if(position == 3) {
                 Pokemon pokemon_old = team.getPokemon3();
                 team.setPokemon3(pokemon_new);
+                teamRepository.save(team);
                 if(pokemon_old != null) pokemonRepository.delete(pokemon_old);
             } else if(position == 4) {
                 Pokemon pokemon_old = team.getPokemon4();
                 team.setPokemon4(pokemon_new);
+                teamRepository.save(team);
                 if(pokemon_old != null) pokemonRepository.delete(pokemon_old);
             } else if(position == 5) {
                 Pokemon pokemon_old = team.getPokemon5();
                 team.setPokemon5(pokemon_new);
+                teamRepository.save(team);
                 if(pokemon_old != null) pokemonRepository.delete(pokemon_old);
             } else if(position == 6) {
                 Pokemon pokemon_old = team.getPokemon6();
                 team.setPokemon6(pokemon_new);
+                teamRepository.save(team);
                 if(pokemon_old != null) pokemonRepository.delete(pokemon_old);
             } else{
                 pokemonRepository.delete(pokemon_new);
-                response.put("message", "Invalid position");
-                return response;
+                return;
             }
 
             teamRepository.save(team);
-            response.put("status", "success");
-            response.put("message", "Pokemon added to team");
-            response.put("response", team);
-            return response;
+            return;
         } catch (Exception e) {
             e.printStackTrace();
-            return response;
+            return;
         }
     }
 

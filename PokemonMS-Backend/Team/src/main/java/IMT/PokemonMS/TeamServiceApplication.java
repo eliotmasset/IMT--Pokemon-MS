@@ -7,9 +7,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 @EnableScheduling
 public class TeamServiceApplication {
-
-	public static void main(String[] args) {
-		SpringApplication.run(TeamServiceApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(TeamServiceApplication.class, args);
+    }
 
 }

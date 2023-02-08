@@ -38,6 +38,7 @@ import org.apache.http.util.EntityUtils;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
+import IMT.PokemonMS.IncubatorService;
 
 
 @RestController
@@ -51,6 +52,8 @@ public class IncubationController {
     @Autowired
     private PokemonTypeRepository pokemonTypeRepository;
 
+    private IncubatorService incubatorService;
+
 	private transient byte[] keyHMAC = "f032932c1cebbd5d6e2b6b48e45ea772f80e998b32dcc21f74ac1b3adf197871".getBytes();
     private transient String apiUserUrl = "http://localhost:8087/user/";
     private transient String apiTeamUrl = "http://localhost:8081/team/";
@@ -60,6 +63,11 @@ public class IncubationController {
 	private transient int iterations = 10000;
 	private transient int keyLength = 100;
     private transient int[] incubatorPrice = {0, 100, 1000, 10000, 500000, 1000000};
+
+    @Autowired
+    public IncubationController(IncubatorService incubatorService) {
+        this.incubatorService = incubatorService;
+    }
 
     private Boolean isValidToken(String jwt_token, String username) {
         try {
@@ -104,26 +112,16 @@ public class IncubationController {
         try {
             JSONObject pokemon = pokemonType.toJson();
             pokemon.put("level", 1);
-            HttpClient httpclient = HttpClients.createDefault();
-            HttpPost httppost = null;
-            if(position == 0) httppost = new HttpPost(this.apiTeamUrl + "addPokemon");
-            else httppost = new HttpPost(this.apiTeamUrl + "replacePokemon");
             JSONObject json = new JSONObject();
-            json.put("identifier", this.team_identifier);
-            json.put("username", username);
-            json.put("pokemon", pokemon);
-            if(position != 0) json.put("position", position);
-            StringEntity entity = new StringEntity(json.toString());
-            httppost.setEntity(entity);
-            httppost.setHeader("Accept", "application/json");
-            httppost.setHeader("Content-type", "application/json");
-            HttpResponse response = httpclient.execute(httppost);
-            if (response.getStatusLine().getStatusCode() != 200) return false;
-            String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
-            JSONParser parser = new JSONParser();
-            JSONObject responseJson = new JSONObject();
-            responseJson = (JSONObject) parser.parse(responseString);
-            if(!responseJson.get("status").equals("success")) return false;
+            JSONObject body = new JSONObject();
+            body.put("identifier", this.team_identifier);
+            body.put("username", username);
+            body.put("pokemon", pokemon);
+            json.put("body", body);
+            if(position == 0) json.put("request", "addPokemon");
+            else json.put("request", "replacePokemon");
+            if(position != 0) body.put("position", position);
+            incubatorService.sendMessage(json.toString());
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -285,10 +283,10 @@ public class IncubationController {
                 response.put("message", "No egg in incubator");
                 return response;
             }
-            /*if( ( (incubator.getStart_date_time().atZone(ZoneOffset.UTC).toInstant().toEpochMilli() / 1000) + incubator.getEgg().getTime_to_incubate() ) >= ( LocalDateTime.now().atZone(ZoneOffset.UTC).toInstant().toEpochMilli() / 1000 ) ) {
+            if( ( (incubator.getStart_date_time().atZone(ZoneOffset.UTC).toInstant().toEpochMilli() / 1000) + incubator.getEgg().getTime_to_incubate() ) >= ( LocalDateTime.now().atZone(ZoneOffset.UTC).toInstant().toEpochMilli() / 1000 ) ) {
                 response.put("message", "Egg can't be hatched, time left : " + (( (incubator.getStart_date_time().atZone(ZoneOffset.UTC).toInstant().toEpochMilli() / 1000) + incubator.getEgg().getTime_to_incubate() ) - ( LocalDateTime.now().atZone(ZoneOffset.UTC).toInstant().toEpochMilli() / 1000 )) + " seconds" );
                 return response;
-            }*/
+            }
             if(position < 0 || position > 6) {
                 response.put("message", "Invalid position");
                 return response;
