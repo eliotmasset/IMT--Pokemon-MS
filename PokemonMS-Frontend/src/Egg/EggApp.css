@@ -230,3 +230,17 @@
   font-size: 16px;
   text-align: left;
 }
+
+#EggApp .Incubator .sellEgg {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    right: 5px;
+    top: 5px;
+    z-index: 10;
+}
+
+#EggApp .Incubator .sellEgg img {
+    width: 100%;
+    height: 100%;
+}

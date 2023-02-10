@@ -82,10 +82,44 @@ public class IncubationController {
         }
     }
 
+    private long timeToHatch(Incubator incubator) {
+        return ((incubator.getStart_date_time().atZone(ZoneOffset.UTC).toInstant().toEpochMilli() / 1000) + incubator.getEgg().getTime_to_incubate()) - ( LocalDateTime.now().atZone(ZoneOffset.UTC).toInstant().toEpochMilli() / 1000 );
+    }
+
+    private Boolean canHatch(Incubator incubator) {
+        return this.timeToHatch(incubator) < 0;
+    }
+
     private Boolean removeMoney(String username, int price) {
         try {
             HttpClient httpclient = HttpClients.createDefault();
             HttpPost httppost = new HttpPost(this.apiUserUrl + "removeMoney");
+            JSONObject json = new JSONObject();
+            json.put("identifier", this.user_identifier);
+            json.put("username", username);
+            json.put("money", price);
+            StringEntity entity = new StringEntity(json.toString());
+            httppost.setEntity(entity);
+            httppost.setHeader("Accept", "application/json");
+            httppost.setHeader("Content-type", "application/json");
+            HttpResponse response = httpclient.execute(httppost);
+            if (response.getStatusLine().getStatusCode() != 200) return false;
+            String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
+            JSONParser parser = new JSONParser();
+            JSONObject responseJson = new JSONObject();
+            responseJson = (JSONObject) parser.parse(responseString);
+            if(!responseJson.get("status").equals("success")) return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    private Boolean addMoney(String username, int price) {
+        try {
+            HttpClient httpclient = HttpClients.createDefault();
+            HttpPost httppost = new HttpPost(this.apiUserUrl + "addMoney");
             JSONObject json = new JSONObject();
             json.put("identifier", this.user_identifier);
             json.put("username", username);
@@ -255,8 +289,6 @@ public class IncubationController {
         return response;
     }
 
-    
-
     @PostMapping("/hatchingPokemon")
     public JSONObject hatchingPokemon(@RequestBody String bodyString) {
         JSONObject response = new JSONObject();
@@ -283,8 +315,12 @@ public class IncubationController {
                 response.put("message", "No egg in incubator");
                 return response;
             }
-            if( ( (incubator.getStart_date_time().atZone(ZoneOffset.UTC).toInstant().toEpochMilli() / 1000) + incubator.getEgg().getTime_to_incubate() ) >= ( LocalDateTime.now().atZone(ZoneOffset.UTC).toInstant().toEpochMilli() / 1000 ) ) {
-                response.put("message", "Egg can't be hatched, time left : " + (( (incubator.getStart_date_time().atZone(ZoneOffset.UTC).toInstant().toEpochMilli() / 1000) + incubator.getEgg().getTime_to_incubate() ) - ( LocalDateTime.now().atZone(ZoneOffset.UTC).toInstant().toEpochMilli() / 1000 )) + " seconds" );
+            if(incubator.getUsername() != username) {
+                response.put("message", "Egg not yours");
+                return response;
+            }
+            if(!this.canHatch(incubator)) {
+                response.put("message", "Egg not ready to hatch : " + this.timeToHatch(incubator) + " seconds remaining");
                 return response;
             }
             if(position < 0 || position > 6) {
@@ -310,5 +346,71 @@ public class IncubationController {
             return response;
         }
     }
+
+    @PostMapping("/sellEgg")
+    public JSONObject sellEgg(@RequestBody String body) {
+        JSONObject response = new JSONObject();
+        response.put("status", "error");
+        response.put("message", "An error occured");
+        response.put("response",  "");
+        try {
+            String jwt_token = "";
+            String username = "";
+            Integer id_egg = null;
+            try {
+                JSONObject json = (JSONObject) new org.json.simple.parser.JSONParser().parse(body);
+                jwt_token = (String) json.get("jwt_token");
+                username = (String) json.get("username");
+                id_egg = ((Long) json.get("id_egg")).intValue();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return response;
+            }
+            if (!isValidToken(jwt_token, username)) {
+                response.put("message", "Invalid token");
+                return response;
+            }
+            Egg egg = eggRepository.findById(id_egg).orElse(null);
+            if(egg == null) {
+                response.put("message", "Egg not found");
+                return response;
+            }
+            Incubator incubator = incubatorRepository.findByEgg(egg);
+            if(incubator == null) {
+                response.put("message", "Egg not in incubator");
+                return response;
+            }
+            if(!incubator.getUsername().equals(username)) {
+                response.put("message", "Egg not yours");
+                return response;
+            }
+
+            /*if(!this.canHatch(incubator)) {
+                response.put("message", "Egg not complete : " + this.timeToHatch(incubator) + " seconds remaining");
+                return response;
+            }*/
+
+            int price = 0;
+            if(egg.getType().equals("common")) price = 180;
+            if(egg.getType().equals("epic")) price = 330;
+            else if(egg.getType().equals("rare")) price = 480;
+
+            if(!this.addMoney(username, price)) {
+                response.put("message", "An error occured when attempting to add money");
+                return response;
+            }
+
+            incubator.setEgg(null);
+            eggRepository.delete(egg);
+
+            response.put("response", "success");
+        } catch (Exception e) {
+            return response;
+        }
+        response.put("status", "success");
+        response.put("message", "Egg sold");
+        return response;
+    }
+
 
 }

@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface EggRepository extends CrudRepository<Egg, Integer> {
 
+    Egg findById(int id);
+
 }
