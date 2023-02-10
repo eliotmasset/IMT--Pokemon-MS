@@ -385,10 +385,10 @@ public class IncubationController {
                 return response;
             }
 
-            /*if(!this.canHatch(incubator)) {
+            if(!this.canHatch(incubator)) {
                 response.put("message", "Egg not complete : " + this.timeToHatch(incubator) + " seconds remaining");
                 return response;
-            }*/
+            }
 
             int price = 0;
             if(egg.getType().equals("common")) price = 180;
