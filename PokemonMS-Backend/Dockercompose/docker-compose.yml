@@ -1,8 +1,8 @@
 version: '3'
 services:
-  postgres_team:
+  postgres-team:
     image: postgres:latest
-    container_name: postgres_team_container
+    container_name: postgres-team
     ports:
       - "8095:5432"
     environment:
@@ -20,9 +20,9 @@ services:
     mac_address: 02:42:ac:11:00:06
     runtime: runc
 
-  postgres_user:
+  postgres-user:
     image: postgres:latest
-    container_name: postgres_user_container
+    container_name: postgres-user
     ports:
       - "8094:5432"
     environment:
@@ -40,7 +40,7 @@ services:
     mac_address: 02:42:ac:11:00:05
     runtime: runc
 
-  postgres_shop:
+  postgres-shop:
     image: postgres:latest
     container_name: postgres-shop
     environment:
@@ -60,7 +60,7 @@ services:
       - /var/lib/postgresql/data
     runtime: runc
 
-  postgres_inventory:
+  postgres-inventory:
     image: postgres:latest
     hostname: ee742f220a0c
     container_name: postgres-inventory
@@ -80,7 +80,7 @@ services:
       - /var/lib/postgresql/data:/var/lib/postgresql/data
     runtime: runc
 
-  postgres_incubation:
+  postgres-incubation:
     image: postgres:latest
     container_name: postgres-incubation
     environment:
@@ -101,59 +101,61 @@ services:
     runtime: runc
 
   inventory:
-    image: inventory
-    container_name: inventory_container
+    image: gregorie/pokemon_ms:inventory
+    container_name: inventory-container
     ports:
       - "8080:8080"
     depends_on:
-      - postgres_inventory
+      - postgres-inventory
     environment:
-      INVENTORYSERVICE_STRING_DB: "jdbc:postgresql://postgres_inventory:5432/inventory"
+      INVENTORYSERVICE_STRING_DB: "jdbc:postgresql://postgres-inventory:5432/inventory"
 
   team:
-    image: team
-    container_name: team_container
+    image: gregorie/pokemon_ms:team
+    container_name: team-container
     ports:
       - "8081:8081"
     depends_on:
-      - postgres_team
+      - postgres-team
     environment:
-      TEAMSERVICE_STRING_DB: "jdbc:postgresql://postgres_team:5432/team"
+      TEAMSERVICE_STRING_DB: "jdbc:postgresql://postgres-team:5432/team"
 
   incubation:
-    image: incubation
-    container_name: incubation_container
+    image: gregorie/pokemon_ms:incubation
+    container_name: incubation-container
     ports:
       - "8082:8082"
     depends_on:
-      - postgres_incubation
+      - postgres-incubation
     environment:
-      INCUBATIONSERVICE_STRING_DB: "jdbc:postgresql://postgres_incubation:5432/incubation"
+      INCUBATIONSERVICE_STRING_DB: "jdbc:postgresql://postgres-incubation:5432/incubation"
 
   shop:
-    image: shop
-    container_name: shop_container
+    image: gregorie/pokemon_ms:shop
+    container_name: shop-container
     ports:
       - "8084:8084"
     depends_on:
-      - postgres_shop
+      - postgres-shop
     environment:
-      SHOPSERVICE_STRING_DB: "jdbc:postgresql://postgres_shop:5432/shop"
+      SHOPSERVICE_STRING_DB: "jdbc:postgresql://postgres-shop:5432/shop"
 
   user:
-    image: user
-    container_name: user_container
+    image: gregorie/pokemon_ms:user
+    container_name: user-container
     ports:
       - "8087:8087"
     depends_on:
-      - postgres_user
+      - postgres-user
     environment:
-      USERSERVICE_STRING_DB: "jdbc:postgresql://postgres_user:5432/user"
+      USERSERVICE_STRING_DB: "jdbc:postgresql://postgres-user:5432/user"
+
 
   rabbitmq:
     image: rabbitmq:latest
     hostname: 40b3f3fbcfc7
     mac_address: 02:42:ac:11:00:02
+    container_name: rabbitmq
     environment:
       RABBITMQ_DEFAULT_USER: inventory
       RABBITMQ_DEFAULT_PASS: faa0e4a9e9ebf9ba4cee7f613e557654ed6867e4b48486fec197286e61cdf08a

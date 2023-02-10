@@ -55,8 +55,8 @@ public class IncubationController {
     private IncubatorService incubatorService;
 
 	private transient byte[] keyHMAC = "f032932c1cebbd5d6e2b6b48e45ea772f80e998b32dcc21f74ac1b3adf197871".getBytes();
-    private transient String apiUserUrl = "http://localhost:8087/user/";
-    private transient String apiTeamUrl = "http://localhost:8081/team/";
+    private transient String apiUserUrl = "http://user-container:8087/user/";
+    private transient String apiTeamUrl = "http://team-container:8081/team/";
     private transient String user_identifier = "5000520b9842577d402722b88797865cd0f881e20c66948f851fda676b7d4e5e";
     private transient String team_identifier = "5a4435c65134598c985385664e54ff742046dbb877c3ab108cf67b0c9242a084";
     private transient String identifier = "a3e50f775c77079fef6da38c8286cc4b85509fd1ca2bdddd665a50cbbc401697";

@@ -45,7 +45,7 @@ public class InventoryController {
 	private transient byte[] keyHMAC = "f032932c1cebbd5d6e2b6b48e45ea772f80e998b32dcc21f74ac1b3adf197871".getBytes();
     private transient String identifier = "ed9bd7861561e5eaadd3f15bd7c0bca004ee7a9298b4b5019820d86622a0cccf";
     private transient String incubation_identifier = "a3e50f775c77079fef6da38c8286cc4b85509fd1ca2bdddd665a50cbbc401697";
-    private transient String apiIncubationUrl = "http://localhost:8082/incubation/";
+    private transient String apiIncubationUrl = "http://incubation-container:8082/incubation/";
 	private transient int iterations = 10000;
 	private transient int keyLength = 100;
 

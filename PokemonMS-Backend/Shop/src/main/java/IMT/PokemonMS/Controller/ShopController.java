@@ -51,8 +51,8 @@ public class ShopController {
     private transient String inventory_identifier = "ed9bd7861561e5eaadd3f15bd7c0bca004ee7a9298b4b5019820d86622a0cccf";
 	private transient int iterations = 10000;
 	private transient int keyLength = 100;
-    private transient String apiUserUrl = "http://localhost:8087/user/";
-    private transient String apiInventoryUrl = "http://localhost:8080/inventory/";
+    private transient String apiUserUrl = "http://user-container:8087/user/";
+    private transient String apiInventoryUrl = "http://inventory-container:8080/inventory/";
 
     private Boolean isValidToken(String jwt_token, String username) {
         try {
