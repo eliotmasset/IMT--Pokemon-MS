@@ -1,0 +1,176 @@
+version: '3'
+services:
+  postgres_team:
+    image: postgres:latest
+    container_name: postgres_team_container
+    ports:
+      - "8095:5432"
+    environment:
+      POSTGRES_PASSWORD: pwd
+      POSTGRES_DB: team
+      PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lib/postgresql/15/bin
+      GOSU_VERSION: 1.16
+      LANG: en_US.utf8
+      PG_MAJOR: 15
+      PG_VERSION: 15.1-1.pgdg110+1
+      PGDATA: /var/lib/postgresql/data
+    volumes:
+      - /var/lib/postgresql/data
+    hostname: ffef59801117
+    mac_address: 02:42:ac:11:00:06
+    runtime: runc
+
+  postgres_user:
+    image: postgres:latest
+    container_name: postgres_user_container
+    ports:
+      - "8094:5432"
+    environment:
+      POSTGRES_PASSWORD: pwd
+      POSTGRES_DB: user
+      PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lib/postgresql/15/bin
+      GOSU_VERSION: 1.16
+      LANG: en_US.utf8
+      PG_MAJOR: 15
+      PG_VERSION: 15.1-1.pgdg110+1
+      PGDATA: /var/lib/postgresql/data
+    volumes:
+      - /var/lib/postgresql/data
+    hostname: a131e25471fb
+    mac_address: 02:42:ac:11:00:05
+    runtime: runc
+
+  postgres_shop:
+    image: postgres:latest
+    container_name: postgres-shop
+    environment:
+      POSTGRES_DB: shop
+      POSTGRES_PASSWORD: pwd
+      PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lib/postgresql/15/bin
+      GOSU_VERSION: 1.16
+      LANG: en_US.utf8
+      PG_MAJOR: 15
+      PG_VERSION: 15.1-1.pgdg110+1
+      PGDATA: /var/lib/postgresql/data
+    hostname: d44b97418b34
+    mac_address: 02:42:ac:11:00:04
+    ports:
+      - "8093:5432"
+    volumes:
+      - /var/lib/postgresql/data
+    runtime: runc
+
+  postgres_inventory:
+    image: postgres:latest
+    hostname: ee742f220a0c
+    container_name: postgres-inventory
+    mac_address: 02:42:ac:11:00:02
+    environment:
+      POSTGRES_DB: inventory
+      POSTGRES_PASSWORD: pwd
+      PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lib/postgresql/15/bin
+      GOSU_VERSION: 1.16
+      LANG: en_US.utf8
+      PG_MAJOR: 15
+      PG_VERSION: 15.1-1.pgdg110+1
+      PGDATA: /var/lib/postgresql/data
+    ports:
+      - "8091:5432"
+    volumes:
+      - /var/lib/postgresql/data:/var/lib/postgresql/data
+    runtime: runc
+
+  postgres_incubation:
+    image: postgres:latest
+    container_name: postgres-incubation
+    environment:
+      POSTGRES_DB: incubation
+      POSTGRES_PASSWORD: pwd
+      PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lib/postgresql/15/bin
+      GOSU_VERSION: 1.16
+      LANG: en_US.utf8
+      PG_MAJOR: 15
+      PG_VERSION: 15.1-1.pgdg110+1
+      PGDATA: /var/lib/postgresql/data
+    hostname: 4d0303cc0106
+    mac_address: 02:42:ac:11:00:03
+    ports:
+      - "8092:5432"
+    volumes:
+      - /var/lib/postgresql/data
+    runtime: runc
+
+  inventory:
+    image: inventory
+    container_name: inventory_container
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres_inventory
+    environment:
+      INVENTORYSERVICE_STRING_DB: "jdbc:postgresql://postgres_inventory:5432/inventory"
+
+  team:
+    image: team
+    container_name: team_container
+    ports:
+      - "8081:8081"
+    depends_on:
+      - postgres_team
+    environment:
+      TEAMSERVICE_STRING_DB: "jdbc:postgresql://postgres_team:5432/team"
+
+  incubation:
+    image: incubation
+    container_name: incubation_container
+    ports:
+      - "8082:8082"
+    depends_on:
+      - postgres_incubation
+    environment:
+      INCUBATIONSERVICE_STRING_DB: "jdbc:postgresql://postgres_incubation:5432/incubation"
+
+  shop:
+    image: shop
+    container_name: shop_container
+    ports:
+      - "8084:8084"
+    depends_on:
+      - postgres_shop
+    environment:
+      SHOPSERVICE_STRING_DB: "jdbc:postgresql://postgres_shop:5432/shop"
+
+  user:
+    image: user
+    container_name: user_container
+    ports:
+      - "8087:8087"
+    depends_on:
+      - postgres_user
+    environment:
+      USERSERVICE_STRING_DB: "jdbc:postgresql://postgres_user:5432/user"
+
+  rabbitmq:
+    image: rabbitmq:latest
+    hostname: 40b3f3fbcfc7
+    mac_address: 02:42:ac:11:00:02
+    environment:
+      RABBITMQ_DEFAULT_USER: inventory
+      RABBITMQ_DEFAULT_PASS: faa0e4a9e9ebf9ba4cee7f613e557654ed6867e4b48486fec197286e61cdf08a
+      PATH: /opt/rabbitmq/sbin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+      RABBITMQ_DATA_DIR: /var/lib/rabbitmq
+      RABBITMQ_VERSION: 3.11.8
+      RABBITMQ_PGP_KEY_ID: 0x0A9AF2115F4687BD29803A206B73A36E6026DFCA
+      RABBITMQ_HOME: /opt/rabbitmq
+      HOME: /var/lib/rabbitmq
+      LANG: C.UTF-8
+      LANGUAGE: C.UTF-8
+      LC_ALL: C.UTF-8
+    volumes:
+      - /var/lib/rabbitmq
+    ports:
+      - 5672:5672
+    labels:
+      org.opencontainers.image.ref.name: ubuntu
+      org.opencontainers.image.version: 20.04
+    runtime: runc
