@@ -70,6 +70,14 @@ public class TeamController {
         }
     }
 
+    private float getRandomMultiplier() {
+        return (float) (Math.random() * (1.5 - 0.5) + 0.5);
+    }
+
+    private float getRandomLevel() {
+        return (float) (Math.random() * (50 - 1) + 1);
+    }
+
     @GetMapping("/getTeam")
     public JSONObject getTeam(@RequestParam String username, @RequestParam String jwt_token) {
         JSONObject response = new JSONObject();
@@ -129,17 +137,16 @@ public class TeamController {
             pokemon_new.setId_pokedex(Math.toIntExact((long) pokemon.get("id")));
             pokemon_new.setName((String) pokemon.get("name"));
             pokemon_new.setEnglish_name((String) pokemon.get("english_name"));
-            pokemon_new.setHp(Math.toIntExact((long) pokemon.get("hp")));
-            pokemon_new.setAttack(Math.toIntExact((long) pokemon.get("attack")));
-            pokemon_new.setDefense(Math.toIntExact((long) pokemon.get("defense")));
-            pokemon_new.setAttack_special(Math.toIntExact((long) pokemon.get("attack_special")));
-            pokemon_new.setDefense_special(Math.toIntExact((long) pokemon.get("defense_special")));
-            pokemon_new.setSpeed(Math.toIntExact((long) pokemon.get("speed")));
-            pokemon_new.setLevel(Math.toIntExact((long) pokemon.get("level")));
+            pokemon_new.setHp(Math.round(((int) pokemon.get("hp"))*this.getRandomMultiplier()));
+            pokemon_new.setAttack(Math.round(((int) pokemon.get("attack"))*this.getRandomMultiplier()));
+            pokemon_new.setDefense(Math.round(((int) pokemon.get("defense"))*this.getRandomMultiplier()));
+            pokemon_new.setAttack_special(Math.round(((int) pokemon.get("attack_special"))*this.getRandomMultiplier()));
+            pokemon_new.setDefense_special(Math.round(((int) pokemon.get("defense_special"))*this.getRandomMultiplier()));
+            pokemon_new.setSpeed(Math.round(((int) pokemon.get("speed"))*this.getRandomMultiplier()));
+            pokemon_new.setLevel(Math.round(this.getRandomLevel()));
             pokemon_new.setGender((Boolean) pokemon.get("gender"));
             pokemon_new.setIs_legendary((Boolean) pokemon.get("is_legendary"));
             pokemonRepository.save(pokemon_new);
-            System.out.println("Add Pokemon : " + pokemon_new.getName());
             
             if(team.getPokemon1() == null)
                 team.setPokemon1(pokemon_new);
@@ -184,18 +191,16 @@ public class TeamController {
             pokemon_new.setId_pokedex(Math.toIntExact((long) pokemon.get("id")));
             pokemon_new.setName((String) pokemon.get("name"));
             pokemon_new.setEnglish_name((String) pokemon.get("english_name"));
-            pokemon_new.setHp(Math.toIntExact((long) pokemon.get("hp")));
-            pokemon_new.setAttack(Math.toIntExact((long) pokemon.get("attack")));
-            pokemon_new.setDefense(Math.toIntExact((long) pokemon.get("defense")));
-            pokemon_new.setAttack_special(Math.toIntExact((long) pokemon.get("attack_special")));
-            pokemon_new.setDefense_special(Math.toIntExact((long) pokemon.get("defense_special")));
-            pokemon_new.setSpeed(Math.toIntExact((long) pokemon.get("speed")));
-            pokemon_new.setLevel(Math.toIntExact((long) pokemon.get("level")));
+            pokemon_new.setHp(Math.round(((int) pokemon.get("hp"))*this.getRandomMultiplier()));
+            pokemon_new.setAttack(Math.round(((int) pokemon.get("attack"))*this.getRandomMultiplier()));
+            pokemon_new.setDefense(Math.round(((int) pokemon.get("defense"))*this.getRandomMultiplier()));
+            pokemon_new.setAttack_special(Math.round(((int) pokemon.get("attack_special"))*this.getRandomMultiplier()));
+            pokemon_new.setDefense_special(Math.round(((int) pokemon.get("defense_special"))*this.getRandomMultiplier()));
+            pokemon_new.setSpeed(Math.round(((int) pokemon.get("speed"))*this.getRandomMultiplier()));
+            pokemon_new.setLevel(Math.round(this.getRandomLevel()));
             pokemon_new.setGender((Boolean) pokemon.get("gender"));
             pokemon_new.setIs_legendary((Boolean) pokemon.get("is_legendary"));
             pokemonRepository.save(pokemon_new);
-            System.out.println("Pokemon saved : " + pokemon_new.getName());
-            System.out.println("Position : " + position);
 
             if(position == 1) {
                 Pokemon pokemon_old = team.getPokemon1();
