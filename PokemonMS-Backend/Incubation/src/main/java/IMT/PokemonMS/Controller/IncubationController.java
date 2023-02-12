@@ -83,7 +83,7 @@ public class IncubationController {
     }
 
     private long timeToHatch(Incubator incubator) {
-        return ((incubator.getStart_date_time().atZone(ZoneOffset.UTC).toInstant().toEpochMilli() / 1000) + incubator.getEgg().getTime_to_incubate()) - ( LocalDateTime.now().atZone(ZoneOffset.UTC).toInstant().toEpochMilli() / 1000 );
+        return ((incubator.getStart_date_time().atZone(ZoneOffset.of("Europe/Paris")).toInstant().toEpochMilli() / 1000) + incubator.getEgg().getTime_to_incubate()) - ( LocalDateTime.now().atZone(ZoneOffset.UTC).toInstant().toEpochMilli() / 1000 );
     }
 
     private Boolean canHatch(Incubator incubator) {
