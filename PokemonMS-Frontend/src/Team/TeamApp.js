@@ -58,7 +58,7 @@ class TeamApp extends React.Component {
                 <li className={className} key={key}>
                     <input type="radio" id={key} name="pkm" value={key} checked={checked} onChange={() => {return;}} readOnly/>
                     {
-                        pokemon === undefined || pokemon === null ? <PokemonItem name="Empty" onClick={()=> this.selectPokemon(key)}/> : <PokemonItem name={pokemon.name} gender={pokemon.gender} level={pokemon.level} onClick={()=> this.selectPokemon(key)}/>
+                        pokemon === undefined || pokemon === null ? <PokemonItem name="Empty" engName="Empty" onClick={()=> this.selectPokemon(key)}/> : <PokemonItem name={pokemon.name} gender={pokemon.gender} level={pokemon.level} engName={pokemon.engName} onClick={()=> this.selectPokemon(key)}/>
                     }
                 </li>
             );

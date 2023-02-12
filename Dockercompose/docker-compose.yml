@@ -1,5 +1,31 @@
 version: '3'
 services:
+  rabbitmq:
+    image: rabbitmq:latest
+    hostname: 40b3f3fbcfc7
+    mac_address: 02:42:ac:11:00:02
+    container_name: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: inventory
+      RABBITMQ_DEFAULT_PASS: faa0e4a9e9ebf9ba4cee7f613e557654ed6867e4b48486fec197286e61cdf08a
+      PATH: /opt/rabbitmq/sbin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+      RABBITMQ_DATA_DIR: /var/lib/rabbitmq
+      RABBITMQ_VERSION: 3.11.8
+      RABBITMQ_PGP_KEY_ID: 0x0A9AF2115F4687BD29803A206B73A36E6026DFCA
+      RABBITMQ_HOME: /opt/rabbitmq
+      HOME: /var/lib/rabbitmq
+      LANG: C.UTF-8
+      LANGUAGE: C.UTF-8
+      LC_ALL: C.UTF-8
+    volumes:
+      - /var/lib/rabbitmq
+    ports:
+      - 5672:5672
+    labels:
+      org.opencontainers.image.ref.name: ubuntu
+      org.opencontainers.image.version: 20.04
+    runtime: runc
+
   postgres-team:
     image: postgres:latest
     container_name: postgres-team
@@ -161,29 +187,3 @@ services:
       - incubation-container
       - shop-container
       - user-container
-
-  rabbitmq:
-    image: rabbitmq:latest
-    hostname: 40b3f3fbcfc7
-    mac_address: 02:42:ac:11:00:02
-    container_name: rabbitmq
-    environment:
-      RABBITMQ_DEFAULT_USER: inventory
-      RABBITMQ_DEFAULT_PASS: faa0e4a9e9ebf9ba4cee7f613e557654ed6867e4b48486fec197286e61cdf08a
-      PATH: /opt/rabbitmq/sbin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-      RABBITMQ_DATA_DIR: /var/lib/rabbitmq
-      RABBITMQ_VERSION: 3.11.8
-      RABBITMQ_PGP_KEY_ID: 0x0A9AF2115F4687BD29803A206B73A36E6026DFCA
-      RABBITMQ_HOME: /opt/rabbitmq
-      HOME: /var/lib/rabbitmq
-      LANG: C.UTF-8
-      LANGUAGE: C.UTF-8
-      LC_ALL: C.UTF-8
-    volumes:
-      - /var/lib/rabbitmq
-    ports:
-      - 5672:5672
-    labels:
-      org.opencontainers.image.ref.name: ubuntu
-      org.opencontainers.image.version: 20.04
-    runtime: runc
