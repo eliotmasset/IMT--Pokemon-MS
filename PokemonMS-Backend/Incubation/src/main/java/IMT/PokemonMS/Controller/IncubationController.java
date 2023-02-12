@@ -237,7 +237,7 @@ public class IncubationController {
             if(eggType.equalsIgnoreCase("common")) egg.setTime_to_incubate(3600);
             else if(eggType.equalsIgnoreCase("rare")) egg.setTime_to_incubate(3600 *2);
             else egg.setTime_to_incubate(3600 * 24);
-            incubator.setStart_date_time(LocalDateTime.now());
+            incubator.setStart_date_time(LocalDateTime.now(ZoneId.of("Europe/Paris")));
             eggRepository.save(egg);
             incubator.setEgg(egg);
             incubatorRepository.save(incubator);
