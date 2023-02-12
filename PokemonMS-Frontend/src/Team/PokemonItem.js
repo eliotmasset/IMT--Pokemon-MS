@@ -14,7 +14,7 @@ export default class PokemonItem extends React.Component {
         } else {
             genderLi = <li></li>
         }
-        const boxGifSrc = "/" + this.props.name + "_box.gif";
+        const boxGifSrc = "/box_sprite/" + this.props.engName.toLowerCase() + ".png";
         return (
             <div className="pokemonItem" onClick={() => this.props.onClick()}>
                 <ul className="pokemonInfos">

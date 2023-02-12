@@ -83,7 +83,9 @@ public class IncubationController {
     }
 
     private long timeToHatch(Incubator incubator) {
-        return ((incubator.getStart_date_time().atZone(ZoneOffset.of("Europe/Paris")).toInstant().toEpochMilli() / 1000) + incubator.getEgg().getTime_to_incubate()) - ( LocalDateTime.now().atZone(ZoneOffset.UTC).toInstant().toEpochMilli() / 1000 );
+        ZoneId zone = ZoneId.of("Europe/Paris");
+        ZoneOffset zoneOffSet = zone.getRules().getOffset(incubator.getStart_date_time());
+        return ((incubator.getStart_date_time().atZone(zoneOffSet).toInstant().toEpochMilli() / 1000) + incubator.getEgg().getTime_to_incubate()) - ( LocalDateTime.now().atZone(ZoneOffset.UTC).toInstant().toEpochMilli() / 1000 );
     }
 
     private Boolean canHatch(Incubator incubator) {
@@ -315,8 +317,8 @@ public class IncubationController {
                 response.put("message", "No egg in incubator");
                 return response;
             }
-            if(incubator.getUsername() != username) {
-                response.put("message", "Egg not yours");
+            if(!incubator.getUsername().equals(username)) {
+                response.put("message", "Egg not yours ");
                 return response;
             }
             if(!this.canHatch(incubator)) {
