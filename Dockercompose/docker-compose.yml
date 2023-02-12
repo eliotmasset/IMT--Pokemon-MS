@@ -100,7 +100,7 @@ services:
       - /var/lib/postgresql/data
     runtime: runc
 
-  inventory:
+  inventory-container:
     image: gregorie/pokemon_ms:inventory
     container_name: inventory-container
     ports:
@@ -110,7 +110,7 @@ services:
     environment:
       INVENTORYSERVICE_STRING_DB: "jdbc:postgresql://postgres-inventory:5432/inventory"
 
-  team:
+  team-container:
     image: gregorie/pokemon_ms:team
     container_name: team-container
     ports:
@@ -120,7 +120,7 @@ services:
     environment:
       TEAMSERVICE_STRING_DB: "jdbc:postgresql://postgres-team:5432/team"
 
-  incubation:
+  incubation-container:
     image: gregorie/pokemon_ms:incubation
     container_name: incubation-container
     ports:
@@ -130,7 +130,7 @@ services:
     environment:
       INCUBATIONSERVICE_STRING_DB: "jdbc:postgresql://postgres-incubation:5432/incubation"
 
-  shop:
+  shop-container:
     image: gregorie/pokemon_ms:shop
     container_name: shop-container
     ports:
@@ -140,7 +140,7 @@ services:
     environment:
       SHOPSERVICE_STRING_DB: "jdbc:postgresql://postgres-shop:5432/shop"
 
-  user:
+  user-container:
     image: gregorie/pokemon_ms:user
     container_name: user-container
     ports:
@@ -150,6 +150,17 @@ services:
     environment:
       USERSERVICE_STRING_DB: "jdbc:postgresql://postgres-user:5432/user"
 
+  front:
+    image: gregorie/pokemon_ms:front
+    container_name: front-container
+    ports:
+      - "3000:3000"
+    depends_on:
+      - inventory-container
+      - team-container
+      - incubation-container
+      - shop-container
+      - user-container
 
   rabbitmq:
     image: rabbitmq:latest
