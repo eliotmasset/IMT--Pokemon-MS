@@ -1,12 +1,15 @@
 import './ProfileApp.css';
 import React from 'react';
 
+const userAdress = "http://localhost:8087/user";
+
 class ProfileApp extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            isDisplayed: false
+            isDisplayed: false,
+            money: 0
         }
     }
 
@@ -14,6 +17,15 @@ class ProfileApp extends React.Component {
         this.setState({isDisplayed: isDisplayed});
 
         document.getElementById("backWall").style.display = "block";
+        this.refreshMoney();
+    }
+
+    async refreshMoney() {
+        let response = await fetch(userAdress + "/getMoney?jwt_token=" + sessionStorage.getItem("jwt_token") + "&username=" + sessionStorage.getItem("username"));
+        let data = await response.json();
+        if(data.response != this.state.money) {
+            this.setState({money: data.response});
+        }
     }
 
   render() {
@@ -44,7 +56,7 @@ class ProfileApp extends React.Component {
                     </div>
                     <div className="oneContent">
                         <p> Argent : </p>
-                        <p id="moneyProfile"></p>
+                        <p id="moneyProfile">{this.state.money}</p>
                     </div>
                     <div className="oneContent">
                         <p> Etage : </p>
